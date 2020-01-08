@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <string>
 using namespace std;
 
 struct TreeNode {
@@ -180,5 +181,84 @@ public:
         result = thirdConvert(root);
         resultList.push_back(result);
         return resultList;
+    }
+};
+
+class TreeToString {
+public:
+    string toString(TreeNode* root) {
+        // write code here
+        string result;
+        stack<TreeNode*> tree;
+        TreeNode* cur;
+        tree.push(root);
+        while(!tree.empty()) {
+            cur = tree.top();
+            tree.pop();
+            if(cur!=NULL) {
+                result += (to_string(cur->val)+"!");
+                tree.push(cur->right);
+                tree.push(cur->left);
+            } else {
+                result += "#!";
+            }
+        }
+        return result;
+    }
+};
+
+class CheckBalance {
+public:
+    int getHeight(TreeNode* root, int height, bool* isBalance) {
+        if(root==NULL)
+            return height;
+        int LH = getHeight(root->left, height+1, isBalance);
+        int RH = getHeight(root->right, height+1, isBalance);
+        if(((LH-RH)>1)||((RH-LH)>1)) {
+            *isBalance = false;
+        }
+        return max(LH, RH);
+    }
+    bool check(TreeNode* root) {
+        bool isBalance = true;
+        int height = 0;
+        getHeight(root, height, &isBalance);
+        return isBalance;
+    }
+};
+
+
+class CheckCompletion {
+public:
+    bool chk(TreeNode* root) {
+        queue<TreeNode*> tree;
+        TreeNode* cur;
+        bool shouldLeaf = false;
+        bool ifCompletion = true;
+        while(!tree.empty()) {
+            cur = tree.front();
+            tree.pop();
+            if(cur->left==NULL&&cur->right!=NULL) {
+                ifCompletion = false;
+                break;
+            }
+            if(!shouldLeaf) {
+                if(cur->left!=NULL&&cur->right==NULL) {
+                    shouldLeaf = true;
+                }
+            } else {
+                if(cur->left!=NULL||cur->right!=NULL) {
+                    ifCompletion = false;
+                    break;
+                }
+            }
+            if(cur->left!=NULL) {
+                tree.push(cur->left);
+            }
+            if(cur->right!=NULL) {
+                tree.push(cur->right);
+            }
+        }
+        return ifCompletion;
     }
 };
