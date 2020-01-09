@@ -3,4 +3,6 @@ project(exercise)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(exercise main.cpp tree.cpp string_reverse.cpp sort.cpp str.cpp)
+#add_executable(exercise main.cpp tree.cpp sort.cpp str.cpp dynamic_program.cpp)
+
+add_executable(exercise main.cpp dynamic_program.cpp)
