@@ -160,3 +160,10 @@ public:
         return a[n-1][cap];
     }
 };
+
+class MinCost {
+public:
+    int findMinCost(string A, int n, string B, int m, int c0, int c1, int c2) {
+        // write code here
+    }
+};
