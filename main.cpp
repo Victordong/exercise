@@ -3,56 +3,44 @@
 
 using namespace std;
 
-class Backpack {
+class MinCost {
 public:
-    int maxValue(vector<int> w, vector<int> v, int n, int cap) {
+    int findMinCost(string A, int n, string B, int m, int c0, int c1, int c2) {
+        // write code here
         int a[1000][1000];
-        for(int i=0;i<n;i++) {
-            a[i][0] = 0;
+        for (int i = 0; i <= n; i++) {
+            a[i][0] = c1 * i;
         }
-        for(int i=1;i<cap;i++) {
-            if(i>=w[0]) {
-                a[0][i] = v[0];
-            } else {
-                a[0][i] = 0;
+        for (int j = 0; j <= m; j++) {
+            a[0][j] = c0 * j;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                int v1 = a[i][j - 1] + c0;
+                int v2 = a[i - 1][j] + c1;
+                int v3;
+                if (A[i - 1] == B[j - 1]) {
+                    v3 = a[i - 1][j - 1];
+                } else {
+                    v3 = a[i - 1][j - 1] + c2;
+                }
+                a[i][j] = min(min(v1, v2), v3);
             }
         }
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<=cap;j++) {
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
                 cout<<a[i][j]<<" ";
             }
-            cout<<"fin"<<endl;
+            cout<<endl;
         }
-        for(int i=1;i<n;i++) {
-            for(int j=1;j<=cap;j++) {
-                if(j>=w[i]) {
-                    a[i][j] = max(a[i-1][j], a[i-1][j-w[i]]+v[i]);
-                } else {
-                    a[i][j] =a[i-1][j];
-                }
-            }
-        }
-//        for(int i=0;i<n;i++) {
-//            for(int j=0;j<=cap;j++) {
-//                cout<<a[i][j]<<" ";
-//            }
-//            cout<<"fin"<<endl;
-//        }
-        return a[n-1][cap];
+        return a[n][m];
     }
 };
 
 int main() {
-    int a[8] = {27,26,41,29,26,25,38};
-    int b[8] = {274,153,595,431,534,586,364};
-    int n=7;
-    vector<int> A;
-    vector<int> B;
-    for(int i=0;i<n;i++) {
-        A.push_back(a[i]);
-        B.push_back(b[i]);
-    }
-    Backpack l;
-    cout<<l.maxValue(A, B, n, 470);
+    string A = "bac";
+    string B = "cbbbc";
+    MinCost l;
+    cout << l.findMinCost(A, 3, B, 5, 8, 3, 4);
     return 0;
 }
