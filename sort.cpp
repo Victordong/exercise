@@ -186,3 +186,73 @@ public:
         return A;
     }
 };
+
+class CountingSort {
+public:
+    int* countingSort(int* A, int n) {
+        // write code here
+        vector<int> help;
+        int min = A[0];
+        int max = A[0];
+        for(int i=0;i<n;i++) {
+            if(max<A[i])
+                max = A[i];
+            if(min>A[i])
+                min = A[i];
+        }
+        for(int i=min;i<=max;i++) {
+            help.push_back(0);
+        }
+        for(int i=0;i<n;i++) {
+            help[A[i]-min] +=1;
+        }
+        int m = 0;
+        for(int i=0;i<=max-min;i++) {
+            int count = help[i];
+            while(count>0) {
+                A[m] = i+min;
+                count-=1;
+                m+=1;
+            }
+        }
+        return A;
+    }
+};
+
+
+class HeapSort {
+public:
+    void swap(int* A, int first, int second) {
+        int swap = A[first];
+        A[first] = A[second];
+        A[second] = swap;
+    }
+    void mergePart(int* A, int start, int end) {
+        int father = start;
+        int son = (father * 2) +1;
+        while(son<=end) {
+            if(son+1<=end && A[son]<A[son+1]) {
+                son++;
+            }
+            if(A[father]>A[son]) {
+                return;
+            } else {
+                swap(A, father, son);
+                father = son;
+                son = father*2+1;
+            }
+        }
+    }
+
+    int* heapSort(int* A, int n) {
+        // write code here
+        for(int i=(n/2)-1;i>=0;i--) {
+            mergePart(A, i, n-1);
+        }
+        for(int i=n-1;i>=0;i--) {
+            swap(A, 0, i);
+            mergePart(A, 0, i-1);
+        }
+        return A;
+    }
+};
