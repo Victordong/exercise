@@ -1,46 +1,82 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
-class MinCost {
+class MaxTree {
 public:
-    int findMinCost(string A, int n, string B, int m, int c0, int c1, int c2) {
+    vector<int> buildMaxTree(vector<int> A, int n) {
         // write code here
-        int a[1000][1000];
-        for (int i = 0; i <= n; i++) {
-            a[i][0] = c1 * i;
-        }
-        for (int j = 0; j <= m; j++) {
-            a[0][j] = c0 * j;
-        }
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                int v1 = a[i][j - 1] + c0;
-                int v2 = a[i - 1][j] + c1;
-                int v3;
-                if (A[i - 1] == B[j - 1]) {
-                    v3 = a[i - 1][j - 1];
-                } else {
-                    v3 = a[i - 1][j - 1] + c2;
+        stack<int> main;
+        stack<int> help;
+        vector<int> left;
+        vector<int> right;
+        vector<int> result;
+        for(int i=0;i<n;i++) {
+            if(main.empty()) {
+                main.push(i);
+                left.push_back(-1);
+            } else {
+                while(!main.empty()&&A[main.top()]<A[i]) {
+                    int cur = main.top();
+                    main.pop();
+                    help.push(cur);
                 }
-                a[i][j] = min(min(v1, v2), v3);
+                if(main.empty()) {
+                    left.push_back(-1);
+                } else {
+                    left.push_back(main.top());
+                }
+                main.push(i);
             }
         }
-        for (int i = 0; i <= n; i++) {
-            for (int j = 0; j <= m; j++) {
-                cout<<a[i][j]<<" ";
-            }
-            cout<<endl;
+        while(!main.empty()) {
+            main.pop();
         }
-        return a[n][m];
+        for(int i=n-1;i>=0;i--) {
+            if(main.empty()) {
+                main.push(i);
+                right.push_back(-1);
+            } else {
+                while(!main.empty()&&A[main.top()]<A[i]) {
+                    int cur = main.top();
+                    main.pop();
+                    help.push(cur);
+                }
+                if(main.empty()) {
+                    right.insert(right.begin(),-1);
+                } else {
+                    right.insert(right.begin(),main.top());
+                }
+                main.push(i);
+            }
+        }
+        for(int i=0;i<n;i++) {
+            if(left[i]<0 && right[i]<0) {
+                result.push_back(-1);
+            } else if(right[i]<0&&left[i]>=0) {
+                result.push_back(left[i]);
+            } else if(right[i]>=0&&left[i]<0) {
+                result.push_back(right[i]);
+            } else {
+                if(A[left[i]]<A[right[i]])
+                    result.push_back(left[i]);
+                else
+                    result.push_back(right[i]);
+            }
+        }
+        return result;
     }
 };
 
 int main() {
-    string A = "bac";
-    string B = "cbbbc";
-    MinCost l;
-    cout << l.findMinCost(A, 3, B, 5, 8, 3, 4);
+    vector<int> a;
+    int b[4] = {2,4,1,3};
+    for(int i=0;i<4;i++) {
+        a.push_back(b[i]);
+    }
+    MaxTree l;
+    l.buildMaxTree(a, 4);
     return 0;
 }

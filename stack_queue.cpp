@@ -122,3 +122,100 @@ public:
         return A;
     }
 };
+
+
+class SlideWindow {
+public:
+    vector<int> slide(vector<int> arr, int n, int w) {
+        vector<int> stack_value;
+        vector<int> result;
+        for(int i=0;i<n;i++) {
+            if(stack_value.empty()) {
+                stack_value.push_back(i);
+            } else {
+                if(arr[i]<arr[stack_value.back()]) {
+                    stack_value.push_back(i);
+                } else {
+                    while(arr[stack_value.back()]<=arr[i]&&!stack_value.empty()) {
+                        stack_value.erase(stack_value.end()-1);
+                    }
+                    stack_value.push_back(i);
+                }
+            }
+            if(stack_value.front()<=i-w) {
+                stack_value.erase(stack_value.begin());
+            }
+            if(i>=w-1) {
+                int val = arr[stack_value.front()];
+                result.push_back(val);
+            }
+        }
+        return result;
+    }
+};
+
+class MaxTree {
+public:
+    vector<int> buildMaxTree(vector<int> A, int n) {
+        // write code here
+        stack<int> main;
+        stack<int> help;
+        vector<int> left;
+        vector<int> right;
+        vector<int> result;
+        for(int i=0;i<n;i++) {
+            if(main.empty()) {
+                main.push(i);
+                left.push_back(-1);
+            } else {
+                while(!main.empty()&&A[main.top()]<A[i]) {
+                    int cur = main.top();
+                    main.pop();
+                    help.push(cur);
+                }
+                if(main.empty()) {
+                    left.push_back(-1);
+                } else {
+                    left.push_back(main.top());
+                }
+                main.push(i);
+            }
+        }
+        while(!main.empty()) {
+            main.pop();
+        }
+        for(int i=n-1;i>=0;i--) {
+            if(main.empty()) {
+                main.push(i);
+                right.push_back(-1);
+            } else {
+                while(!main.empty()&&A[main.top()]<A[i]) {
+                    int cur = main.top();
+                    main.pop();
+                    help.push(cur);
+                }
+                if(main.empty()) {
+                    right.insert(right.begin(),-1);
+                } else {
+                    right.insert(right.begin(),main.top());
+                }
+                main.push(i);
+            }
+        }
+        for(int i=0;i<n;i++) {
+            if(left[i]<0 && right[i]<0) {
+                result.push_back(-1);
+            } else if(right[i]<0&&left[i]>=0) {
+                result.push_back(left[i]);
+            } else if(right[i]>=0&&left[i]<0) {
+                result.push_back(right[i]);
+            } else {
+                if(A[left[i]]<A[right[i]])
+                    result.push_back(left[i]);
+                else
+                    result.push_back(right[i]);
+            }
+        }
+        return result;
+    }
+};
