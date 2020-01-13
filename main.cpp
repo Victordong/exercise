@@ -4,54 +4,55 @@
 #include <queue>
 using namespace std;
 
-class ScaleSort {
+class Prior {
 public:
-    void heap(vector<int> &A, int root, int k)
-    {
-        int smallest = root, left = root*2 + 1, right = left + 1;
-        if(left < k && A[smallest] > A[left])
-            smallest = left;
-        if(right < k && A[smallest] > A[right])
-            smallest = right;
-        if(smallest != root)
-        {
-            swap(A[root], A[smallest]);
-            heap(A, smallest, k);
+    int quickSortPart(vector<string> &strs, int begin, int end) {
+        int left = begin;
+        int right = end;
+        string temp = strs[left];
+        while (left < right) {
+            while (temp + strs[right] < strs[right] + temp && right > left) {
+                right--;
+            }
+            strs[left] = strs[right];
+            while (temp + strs[left] > strs[left] + temp && right > left) {
+                left++;
+            }
+            strs[right] = strs[left];
         }
+        strs[left] = temp;
+        return left;
     }
 
-    vector<int> sortElement(vector<int> A, int n, int k) {
-        // write code here
+    void quickSort(vector<string> &strs, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int mid = quickSortPart(strs, left, right);
+        quickSort(strs, left, mid);
+        quickSort(strs, mid + 1, right);
+    }
 
-        int i, j;
-        vector<int> help(k, 0);
-        for(i = 0; i < k; ++i)
-            help[i] = A[i];
-        for(i = k/2-1; i >= 0; --i)
-            heap(help, i, k);
-        for(i = 0; i < n-k; ++i)
-        {
-            A[i] = help[0];
-            help[0] = A[i+k];
-            heap(help, 0, k);
+    string findSmallest(vector<string> strs, int n) {
+        // write code here
+        string result;
+        quickSort(strs, 0, n-1);
+        for(int i =0;i<n;i++) {
+            result += strs[i];
         }
-        for(i = k; i > 0; --i)
-        {
-            A[n-i] = help[0];
-            swap(help[0], help[i-1]);
-            heap(help, 0, i-1);
-        }
-        return A;
+        return result;
     }
 };
 int main() {
-    int a[] = {2,1,4,3,6,5,8,7,10,9};
-    vector<int>A;
-    for(int i=0;i<15;i++) {
-        A.push_back(a[i]);
+    string s[] = {"abc","de", "a"};
+    vector<string> A;
+    for(int i=0;i<3;i++) {
+        A.push_back(s[i]);
     }
-    ScaleSort l;
-    l.sortElement(A, 10, 2);
+    Prior r;
 
+    string result = r.findSmallest(A,3);
+//    r.reverse(A, 4,9);
+    cout<<result<<endl;
     return 0;
 }

@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 14)
 
 #add_executable(exercise main.cpp tree.cpp sort.cpp str.cpp dynamic_program.cpp)
 
-add_executable(exercise main.cpp sort.cpp)
+add_executable(exercise main.cpp str.cpp)
