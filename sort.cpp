@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+
 using namespace std;
 
 class BubbleSort {
@@ -71,11 +72,11 @@ public:
     int partSort(int *A, int left, int right) {
         int swap = A[left];
         while (left < right) {
-            while (A[right]>=swap && right> left) {
+            while (A[right] >= swap && right > left) {
                 right--;
             }
             A[left] = A[right];
-            while (A[left] <=swap && left< right) {
+            while (A[left] <= swap && left < right) {
                 left++;
             }
             A[right] = A[left];
@@ -85,15 +86,15 @@ public:
     }
 
     void quickSortMain(int *A, int left, int right) {
-        if(left<right) {
+        if (left < right) {
             int index = partSort(A, left, right);
-            quickSortMain(A, left, index-1);
-            quickSortMain(A, index+1, right);
+            quickSortMain(A, left, index - 1);
+            quickSortMain(A, index + 1, right);
         }
     }
 
     int *quickSort(int *A, int n) {
-        quickSortMain(A, 0, n-1);
+        quickSortMain(A, 0, n - 1);
         return A;
     }
 };
@@ -101,57 +102,60 @@ public:
 
 class MergeSort {
 public:
-    void merge_part(int* A, int start, int mid, int end) {
+    void merge_part(int *A, int start, int mid, int end) {
         int temp[1000];
-        int i=start;
-        int j=mid+1;
-        int k=0;
-        while(i<=mid&&j<end) {
-            if(A[i]<A[j]) {
+        int i = start;
+        int j = mid + 1;
+        int k = 0;
+        while (i <= mid && j < end) {
+            if (A[i] < A[j]) {
                 temp[k] = A[i];
-                i+=1;
+                i += 1;
             } else {
                 temp[k] = A[j];
-                j+=1;
+                j += 1;
             }
-            k+=1;
+            k += 1;
         }
-        if(i==mid+1) {
-            while(j<end) {
+        if (i == mid + 1) {
+            while (j < end) {
                 temp[k] = A[j];
-                k+=1;
-                j+=1;
+                k += 1;
+                j += 1;
             }
-        }else if(j==end) {
-            while(i<=mid) {
+        } else if (j == end) {
+            while (i <= mid) {
                 temp[k] = A[i];
-                k+=1;
-                i+=1;
+                k += 1;
+                i += 1;
             }
         }
-        for(i=start,k=0;i<end;i++,k++) {
+        for (i = start, k = 0; i < end; i++, k++) {
             A[i] = temp[k];
         }
     }
-    void merge(int* A, int start, int end,int n) {
-        if(start>=end) {
+
+    void merge(int *A, int start, int end, int n) {
+        if (start >= end) {
             return;
         }
-        int mid = (start+end)/2;
+        int mid = (start + end) / 2;
         merge(A, start, mid, n);
-        merge(A, mid+1, end, n);
+        merge(A, mid + 1, end, n);
         printList(A, n);
         merge_part(A, start, mid, end);
     }
+
     void printList(int *A, int n) {
-        for(int i=0;i<n;i++) {
-            cout<<A[i]<<" ";
+        for (int i = 0; i < n; i++) {
+            cout << A[i] << " ";
         }
-        cout<<endl;
+        cout << endl;
     }
-    int* mergeSort(int* A, int n) {
+
+    int *mergeSort(int *A, int n) {
         // write code here
-        merge(A,0,n-1, n);
+        merge(A, 0, n - 1, n);
         return A;
     }
 };
@@ -159,21 +163,21 @@ public:
 
 class RadixSort {
 public:
-    int* radixSort(int* A, int n) {
+    int *radixSort(int *A, int n) {
         // write code here
         queue<int> a[10];
         int i;
-        int k=1;
-        for(int m=0;m<3;m++) {
-            for(i=0;i<n;i++) {
-                int cur = (A[i]/k)%10;
+        int k = 1;
+        for (int m = 0; m < 3; m++) {
+            for (i = 0; i < n; i++) {
+                int cur = (A[i] / k) % 10;
                 a[cur].push(A[i]);
             }
-            i=0;
+            i = 0;
 
-            while(i<n) {
-                for(int j=0;j<10;j++) {
-                    while(!a[j].empty()) {
+            while (i < n) {
+                for (int j = 0; j < 10; j++) {
+                    while (!a[j].empty()) {
                         A[i] = a[j].front();
                         a[j].pop();
                         i++;
@@ -181,7 +185,7 @@ public:
                 }
             }
 
-            k = k*10;
+            k = k * 10;
         }
         return A;
     }
@@ -189,30 +193,30 @@ public:
 
 class CountingSort {
 public:
-    int* countingSort(int* A, int n) {
+    int *countingSort(int *A, int n) {
         // write code here
         vector<int> help;
         int min = A[0];
         int max = A[0];
-        for(int i=0;i<n;i++) {
-            if(max<A[i])
+        for (int i = 0; i < n; i++) {
+            if (max < A[i])
                 max = A[i];
-            if(min>A[i])
+            if (min > A[i])
                 min = A[i];
         }
-        for(int i=min;i<=max;i++) {
+        for (int i = min; i <= max; i++) {
             help.push_back(0);
         }
-        for(int i=0;i<n;i++) {
-            help[A[i]-min] +=1;
+        for (int i = 0; i < n; i++) {
+            help[A[i] - min] += 1;
         }
         int m = 0;
-        for(int i=0;i<=max-min;i++) {
+        for (int i = 0; i <= max - min; i++) {
             int count = help[i];
-            while(count>0) {
-                A[m] = i+min;
-                count-=1;
-                m+=1;
+            while (count > 0) {
+                A[m] = i + min;
+                count -= 1;
+                m += 1;
             }
         }
         return A;
@@ -222,36 +226,79 @@ public:
 
 class HeapSort {
 public:
-    void swap(int* A, int first, int second) {
+    void swap(int *A, int first, int second) {
         int swap = A[first];
         A[first] = A[second];
         A[second] = swap;
     }
-    void mergePart(int* A, int start, int end) {
+
+    void mergePart(int *A, int start, int end) {
         int father = start;
-        int son = (father * 2) +1;
-        while(son<=end) {
-            if(son+1<=end && A[son]<A[son+1]) {
+        int son = (father * 2) + 1;
+        while (son <= end) {
+            if (son + 1 <= end && A[son] < A[son + 1]) {
                 son++;
             }
-            if(A[father]>A[son]) {
+            if (A[father] > A[son]) {
                 return;
             } else {
                 swap(A, father, son);
                 father = son;
-                son = father*2+1;
+                son = father * 2 + 1;
             }
         }
     }
 
-    int* heapSort(int* A, int n) {
+    int *heapSort(int *A, int n) {
         // write code here
-        for(int i=(n/2)-1;i>=0;i--) {
-            mergePart(A, i, n-1);
+        for (int i = (n / 2) - 1; i >= 0; i--) {
+            mergePart(A, i, n - 1);
         }
-        for(int i=n-1;i>=0;i--) {
+        for (int i = n - 1; i >= 0; i--) {
             swap(A, 0, i);
-            mergePart(A, 0, i-1);
+            mergePart(A, 0, i - 1);
+        }
+        return A;
+    }
+};
+
+
+class ScaleSort {
+public:
+    void heap(vector<int> &A, int root, int k)
+    {
+        int smallest = root, left = root*2 + 1, right = left + 1;
+        if(left < k && A[smallest] > A[left])
+            smallest = left;
+        if(right < k && A[smallest] > A[right])
+            smallest = right;
+        if(smallest != root)
+        {
+            swap(A[root], A[smallest]);
+            heap(A, smallest, k);
+        }
+    }
+
+    vector<int> sortElement(vector<int> A, int n, int k) {
+        // write code here
+
+        int i, j;
+        vector<int> help(k, 0);
+        for(i = 0; i < k; ++i)
+            help[i] = A[i];
+        for(i = k/2-1; i >= 0; --i)
+            heap(help, i, k);
+        for(i = 0; i < n-k; ++i)
+        {
+            A[i] = help[0];
+            help[0] = A[i+k];
+            heap(help, 0, k);
+        }
+        for(i = k; i > 0; --i)
+        {
+            A[n-i] = help[0];
+            swap(help[0], help[i-1]);
+            heap(help, 0, i-1);
         }
         return A;
     }
