@@ -303,3 +303,195 @@ public:
         return A;
     }
 };
+
+
+class Checker {
+public:
+    void swap(vector<int>&a, int first, int second) {
+        int temp = a[first];
+        a[first] = a[second];
+        a[second] = temp;
+    }
+    void heap_part(vector<int>&a, int start, int end) {
+        int father = start;
+        int son = father*2+1;
+        while(son<=end) {
+            if(son+1<=end&&a[son]>a[son+1]) {
+                son++;
+            }
+            if(a[father]<a[son]) {
+                return;
+            } else {
+                swap(a,father, son);
+                father = son;
+                son = father*2+1;
+            }
+        }
+    }
+    void heap_sort(vector<int>&a, int n) {
+        for(int i=n/2-1;i>=0;i--) {
+            heap_part(a,i,n-1);
+        }
+        for(int i=n-1;i>=0;i--) {
+            swap(a,0,i);
+            heap_part(a,0,i-1);
+        }
+    }
+    bool checkDuplicate(vector<int> a, int n) {
+        // write code here
+        heap_sort(a, n);
+        for(int i=0;i<n-1;i++) {
+            if(a[i]==a[i+1])
+                return true;
+        }
+        return false;
+    }
+};
+
+
+class Merge {
+public:
+    int* mergeAB(int* A, int* B, int n, int m) {
+        // write code here
+        int i=n-1;
+        int j = m-1;
+        int c = n+m-1;
+        while(i>=0&&j>=0) {
+            if(A[i]>B[j]) {
+                A[c] = A[i];
+                i--;
+            }else {
+                A[c] = B[j];
+                j--;
+            }
+            c--;
+        }
+        if(j<0) {
+            while(i>=0) {
+                A[c] = A[i];
+                c--;
+                i--;
+            }
+        } else if(i < 0) {
+            while(j>=0) {
+                A[c] = A[j];
+                c--;
+                j--;
+            }
+        }
+        return A;
+    }
+};
+
+class ThreeColor {
+public:
+    void swap(vector<int> &A, int first, int second) {
+        int swap = A[first];
+        A[first] = A[second];
+        A[second] = swap;
+    }
+    vector<int> sortThreeColor(vector<int> A, int n) {
+        // write code here
+        int i = -1;
+        int j = n;
+        int cur = 0;
+        while(cur<j) {
+            if(A[cur]==0) {
+                swap(A, i+1, cur);
+                i+=1;
+                cur+=1;
+            } else if (A[cur] == 2) {
+                swap(A, j-1, cur);
+                j-=1;
+            } else {
+                cur+=1;
+            }
+        }
+        return A;
+    }
+};
+
+
+class Finder {
+public:
+    bool findX(vector<vector<int> > mat, int n, int m, int x) {
+        // write code here
+        int i = 0;
+        int j = m-1;
+        while(i<n&&j>=0) {
+            if(mat[i][j]==x) {
+                return true;
+            } else if(mat[i][j]>x) {
+                j-=1;
+            } else {
+                i+=1;
+            }
+        }
+        return false;
+    }
+};
+
+
+class Subsequence {
+public:
+    int shortestSubsequence(vector<int> A, int n) {
+        // write code here
+        int max = INT_MIN;
+        int min = INT_MAX;
+        int a = 0;
+        int b = 0;
+        for(int cur=0;cur<n;cur++) {
+            if(A[cur]>=max) {
+                max = A[cur];
+            } else {
+                a = cur;
+            }
+        }
+        for(int cur=n-1;cur>=0;cur--) {
+            if(A[cur]<=min) {
+                min = A[cur];
+            } else {
+                b = cur;
+            }
+        }
+        if(a==b) {
+            return 0;
+        } else {
+            return a-b+1;
+        }
+    }
+};
+
+class Gap {
+public:
+
+
+    int maxGap(vector<int> A, int n) {
+        int minValue = A[0], maxValue = A[0];
+        for (int i = 1; i<n; i++){
+            if (A[i]>maxValue)
+                maxValue = A[i];
+            if (A[i] < minValue)
+                minValue = A[i];
+        }
+        vector<int> bocketMax(n, INT_MIN);
+        vector<int> bocketMin(n, INT_MAX);
+        int len = maxValue - minValue;
+        if (len < 1)
+            return 0;
+        for (int i = 0; i < n; i++){
+            int index = (double)(A[i] - minValue) / len*(n - 1);
+            bocketMax[index] = max(A[i], bocketMax[index]);
+            bocketMin[index] = min(A[i], bocketMin[index]);
+        }
+        int res = 0, pre = bocketMax[0];
+        for (int i = 1; i < n; i++){
+            if (bocketMin[i] != INT_MAX){
+                res = max(res, bocketMin[i] - pre);
+                pre = bocketMax[i];
+            }
+        }
+
+        return res;
+    }
+};
