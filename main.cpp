@@ -4,68 +4,61 @@
 #include <queue>
 using namespace std;
 
-struct ListNode {
-    int val;
-    struct ListNode *next;
-
-    ListNode(int x) : val(x), next(NULL) {}
-};
-
-class InsertValue {
+class Solution {
 public:
-    ListNode* insert(vector<int> A, vector<int> nxt, int val) {
-        // write code here
-        auto new_node = new ListNode(val);
-        if (A.empty()) {
-            new_node->next = new_node;
-            return new_node;
-        }
-        auto head = new ListNode(A[0]);
-        ListNode* cur = head;
-        for (int i = 0; i < A.size(); i++) {
-            ListNode *l;
-            if (nxt[i] != 0)
-                l = new ListNode(A[nxt[i]]);
-            else
-                l = head;
-            cur->next = l;
-            cur = l;
-        }
-        cur = head;
-        ListNode* next = head->next;
-        while(next!=head) {
-            if (val <= next->val && val >= cur->val) {
-                break;
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        int a[101][101];
+        bool can = true;
+        for(int i=0;i<m;i++) {
+            if(obstacleGrid[i][0]==1) {
+                can = false;
             }
-            cur = next;
-            next = cur->next;
+            if(can){
+                a[i][0] = 1;
+            } else {
+                a[i][0] = 0;
+            }
         }
-        if(next==head&&val<head->val) {
-            head = new_node;
+        can = true;
+        for(int i=0;i<m;i++) {
+            if(obstacleGrid[0][i]==1) {
+                can = false;
+            }
+            if(can){
+                a[0][i] = 1;
+            } else {
+                a[0][i] = 0;
+            }
         }
-        new_node->next = next;
-        cur->next = new_node;
-        cur = head;
-        while(cur->next!=head) {
-            cout<<cur->val<<" ";
-            cur = cur->next;
+        for(int i=1;i<m;i++) {
+            for(int j=1;j<n;j++) {
+                if(obstacleGrid[i][j]==1) {
+                    a[i][j] = 0;
+                } else {
+                    a[i][j] = a[i-1][j]+a[i][j-1];
+                }
+            }
         }
-        cout<<cur->val<<" "<<cur->next->val<<endl;
-        return head;
+        for(int i=0;i<m;i++) {
+            for(int j=0;j<n;j++) {
+                cout<<a[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+        cout<<a[m-1][n-1]<<endl;
+        return a[m-1][n-1];
     }
 };
-
 int main() {
-    int a[] = {1,3,4,5,7};
-    int b[] = {1,2,3,4,0};
-    vector<int> A;
+    vector<vector<int> > A;
     vector<int> B;
-    for(int i=0;i<5;i++) {
-        A.push_back(a[i]);
-        B.push_back(b[i]);
-    }
-    InsertValue i;
-    i.insert(A,B,2);
+    B.push_back(0);
+    B.push_back(1);
+    A.push_back(B);
+    Solution i;
+    i.uniquePathsWithObstacles(A);
 //    r.reverse(A, 4,9);
     return 0;
 }
