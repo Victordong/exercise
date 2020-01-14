@@ -171,3 +171,88 @@ public:
         return result;
     }
 };
+
+class Replacement {
+public:
+    string replaceSpace(string iniString, int length) {
+        // write code here
+        int n=0;
+        for(int i=0;i<length;i++){
+            if(iniString[i]==' '){
+                n++;
+            }
+        }
+        if (n==0) return iniString;
+        else{
+            int j=length+2*n-1;
+            string s=iniString+string(2*n,'0');
+            for(int i=length-1;i>=0;i--){
+                if(iniString[i]==' '){
+                    s[j--]='0';
+                    s[j--]='2';
+                    s[j--]='%';
+                }
+                else s[j--]=iniString[i];
+            }
+            return s;
+        }
+    }
+};
+
+class Parenthesis {
+public:
+    bool chkParenthesis(string A, int n) {
+        // write code here
+        int num = 0;
+        for(int i=0;i<n;i++) {
+            if(A[i]=='(') {
+                num++;
+            } else {
+                num--;
+            }
+            if(num<0)
+                return false;
+        }
+        if(num!=0)
+            return false;
+        else
+            return true;
+    }
+};
+
+class DistinctSubstring {
+public:
+    int longestSubstring(string A, int n) {
+        // write code here
+        vector<int> help[26];
+        int length[n];
+        for(int i=0;i<n;i++) {
+            length[n] = 0;
+        }
+        int pre = 0;
+        for(int i=0;i<n;i++) {
+            int cur = A[i]-'a';
+            if(help[cur].empty()){
+                pre+=1;
+                length[i] = pre;
+            } else{
+                int pos1 = help[cur].back();
+                int pos2 = i - pre;
+                if(pos1>=pos2) {
+                    pre = i-pos1;
+                } else {
+                    pre += 1;
+                }
+                length[i] = pre;
+            }
+            help[cur].push_back(i);
+        }
+        int max=0;
+        for(int i=0;i<n;i++) {
+            if(max<length[i]) {
+                max = length[i];
+            }
+        }
+        return max;
+    }
+};

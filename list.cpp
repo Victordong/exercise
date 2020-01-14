@@ -15,7 +15,7 @@ struct ListNode {
 
 class InsertValue {
 public:
-    ListNode *insert(vector<int> A, vector<int> nxt, int val) {
+    ListNode* insert(vector<int> A, vector<int> nxt, int val) {
         // write code here
         ListNode *new_node = new ListNode(val);
         if (A.empty()) {
@@ -34,23 +34,44 @@ public:
             cur = l;
         }
         cur = head;
-        ListNode *next = head->next;
-        while (true) {
-            if (next != head && val < next->val && val > cur->val) {
-                cur->next = new_node;
-                new_node->next = next;
-                if (next != head)
-                    break;
-            }
-            if (next == head) {
-                new_node->next = head;
-                cur->next = new_node;
-                if (val < head->val) {
-                    head = new_node;
-                }
+        ListNode* next = head->next;
+        while(next!=head) {
+            if (val <= next->val && val >= cur->val) {
                 break;
             }
+            cur = next;
+            next = cur->next;
         }
+        if(next==head&&val<head->val) {
+            head = new_node;
+        }
+        new_node->next = next;
+        cur->next = new_node;
         return head;
+    }
+};
+class Remove {
+public:
+    ListNode* removeNode(ListNode* pHead, int delVal) {
+        // write code here
+        if(pHead->val == delVal) {
+            ListNode *node = pHead->next;
+            pHead->next = NULL;
+            return node;
+        }
+        ListNode *pre = pHead;
+        ListNode *cur = pHead->next;
+        while(cur != NULL)
+        {
+            if(cur->val == delVal)
+            {
+                pre->next = cur->next;
+                cur->next = NULL;
+                break;
+            }
+            pre = pre->next;
+            cur = cur->next;
+        }
+        return pHead;
     }
 };

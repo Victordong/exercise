@@ -4,55 +4,68 @@
 #include <queue>
 using namespace std;
 
-class Prior {
+struct ListNode {
+    int val;
+    struct ListNode *next;
+
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
+class InsertValue {
 public:
-    int quickSortPart(vector<string> &strs, int begin, int end) {
-        int left = begin;
-        int right = end;
-        string temp = strs[left];
-        while (left < right) {
-            while (temp + strs[right] < strs[right] + temp && right > left) {
-                right--;
-            }
-            strs[left] = strs[right];
-            while (temp + strs[left] > strs[left] + temp && right > left) {
-                left++;
-            }
-            strs[right] = strs[left];
-        }
-        strs[left] = temp;
-        return left;
-    }
-
-    void quickSort(vector<string> &strs, int left, int right) {
-        if (left >= right) {
-            return;
-        }
-        int mid = quickSortPart(strs, left, right);
-        quickSort(strs, left, mid);
-        quickSort(strs, mid + 1, right);
-    }
-
-    string findSmallest(vector<string> strs, int n) {
+    ListNode* insert(vector<int> A, vector<int> nxt, int val) {
         // write code here
-        string result;
-        quickSort(strs, 0, n-1);
-        for(int i =0;i<n;i++) {
-            result += strs[i];
+        auto new_node = new ListNode(val);
+        if (A.empty()) {
+            new_node->next = new_node;
+            return new_node;
         }
-        return result;
+        auto head = new ListNode(A[0]);
+        ListNode* cur = head;
+        for (int i = 0; i < A.size(); i++) {
+            ListNode *l;
+            if (nxt[i] != 0)
+                l = new ListNode(A[nxt[i]]);
+            else
+                l = head;
+            cur->next = l;
+            cur = l;
+        }
+        cur = head;
+        ListNode* next = head->next;
+        while(next!=head) {
+            if (val <= next->val && val >= cur->val) {
+                break;
+            }
+            cur = next;
+            next = cur->next;
+        }
+        if(next==head&&val<head->val) {
+            head = new_node;
+        }
+        new_node->next = next;
+        cur->next = new_node;
+        cur = head;
+        while(cur->next!=head) {
+            cout<<cur->val<<" ";
+            cur = cur->next;
+        }
+        cout<<cur->val<<" "<<cur->next->val<<endl;
+        return head;
     }
 };
-int main() {
-    string s[] = {"abc","de", "a"};
-    vector<string> A;
-    for(int i=0;i<3;i++) {
-        A.push_back(s[i]);
-    }
-    Prior r;
 
-    string result = r.findSmallest(A,3);
+int main() {
+    int a[] = {1,3,4,5,7};
+    int b[] = {1,2,3,4,0};
+    vector<int> A;
+    vector<int> B;
+    for(int i=0;i<5;i++) {
+        A.push_back(a[i]);
+        B.push_back(b[i]);
+    }
+    InsertValue i;
+    i.insert(A,B,2);
 //    r.reverse(A, 4,9);
-    cout<<result<<endl;
     return 0;
 }
