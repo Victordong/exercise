@@ -6,59 +6,62 @@ using namespace std;
 
 class Solution {
 public:
-    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
-        int m = obstacleGrid.size();
-        int n = obstacleGrid[0].size();
-        int a[101][101];
-        bool can = true;
-        for(int i=0;i<m;i++) {
-            if(obstacleGrid[i][0]==1) {
-                can = false;
-            }
-            if(can){
-                a[i][0] = 1;
-            } else {
-                a[i][0] = 0;
+    string longestPalindrome(string s) {
+        int a[1001][1001];
+        int n = s.length();
+        if (n == 1) {
+            return s;
+        }
+        for (int i = 0; i < n; i++) {
+            a[i][i] = true;
+        }
+        for (int i = 1; i < n; i++) {
+            if (s[i] == s[i - 1]) {
+                a[i - 1][i] = true;
             }
         }
-        can = true;
-        for(int i=0;i<m;i++) {
-            if(obstacleGrid[0][i]==1) {
-                can = false;
-            }
-            if(can){
-                a[0][i] = 1;
-            } else {
-                a[0][i] = 0;
-            }
-        }
-        for(int i=1;i<m;i++) {
-            for(int j=1;j<n;j++) {
-                if(obstacleGrid[i][j]==1) {
-                    a[i][j] = 0;
+        for(int m=2;m<n;m++) {
+            for (int i = 0; i < n; i++) {
+                int j = i+m;
+                if(j>=n) {
+                    break;
+                }
+                if(s[i]==s[j]&&a[i+1][j-1]) {
+                    a[i][j] = true;
                 } else {
-                    a[i][j] = a[i-1][j]+a[i][j-1];
+                    a[i][j] = false;
                 }
             }
         }
-        for(int i=0;i<m;i++) {
-            for(int j=0;j<n;j++) {
+
+        int max = 0;
+        int begin = 0;
+        int end = 0;
+        for(int i=0;i<n;i++) {
+            for(int j=i;j<n;j++) {
+                if(a[i][j] && j-i>max) {
+                    max = j-i;
+                    begin = i;
+                    end = j;
+                }
+            }
+        }
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<i;j++) {
+                cout<<0<<" ";
+            }
+            for(int j=i;j<n;j++) {
                 cout<<a[i][j]<<" ";
             }
             cout<<endl;
         }
-        cout<<a[m-1][n-1]<<endl;
-        return a[m-1][n-1];
+        return s.substr(begin, end-begin+1);
     }
 };
 int main() {
-    vector<vector<int> > A;
-    vector<int> B;
-    B.push_back(0);
-    B.push_back(1);
-    A.push_back(B);
+    string A = "abb";
     Solution i;
-    i.uniquePathsWithObstacles(A);
+    cout<< i.longestPalindrome(A);
 //    r.reverse(A, 4,9);
     return 0;
 }

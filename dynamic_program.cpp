@@ -192,7 +192,40 @@ public:
 class LongestPalindrome {
 public:
     string longestPalindrome(string s) {
-
+        int a[1001][1001];
+        int n = s.length();
+        if (n == 1) {
+            return s;
+        }
+        for (int i = 0; i < n; i++) {
+            a[i][i] = true;
+        }
+        for (int i = 1; i < n; i++) {
+            if (s[i] == s[i - 1]) {
+                a[i - 1][i] = true;
+            }
+        }
+        for (int i = 0; i < n-2; i++) {
+            int j = i+2;
+            if(s[i]==s[j]&&a[i+1][j-1]) {
+                a[i][j] = true;
+            } else {
+                a[i][j] = false;
+            }
+        }
+        int max = 0;
+        int begin = 0;
+        int end = 0;
+        for(int i=0;i<n;i++) {
+            for(int j=i;i<n;j++) {
+                if(a[i][j] && j-i>max) {
+                    max = j-i;
+                    begin = i;
+                    end = j;
+                }
+            }
+        }
+        return s.substr(begin, end);
     }
 };
 
@@ -256,23 +289,60 @@ public:
     }
 };
 
-class Solution {
+class MinPathSum {
 public:
     int minPathSum(vector<vector<int>> &grid) {
         int m = grid.size();
         int n = grid[0].size();
         for (int i = 1; i < m; i++) {
-            grid[i][0]+=grid[i-1][0];
+            grid[i][0] += grid[i - 1][0];
         }
         for (int i = 1; i < n; i++) {
-            grid[0][i]+=grid[0][i-1];
+            grid[0][i] += grid[0][i - 1];
         }
         for (int i = 1; i < m; i++) {
             for (int j = 1; j < n; j++) {
-                int total = min(grid[i][j-1], grid[i-1][j]);
-                grid[i][j] = total+grid[i][j];
+                int total = min(grid[i][j - 1], grid[i - 1][j]);
+                grid[i][j] = total + grid[i][j];
             }
         }
         return grid[m - 1][n - 1];
+    }
+};
+
+
+class NumDecodings {
+public:
+    int numDecodings(string s) {
+        int n = s.length();
+        int a[1000];
+        if (s[0] == '0') {
+            return 0;
+        } else {
+            a[0] = 1;
+        }
+        for (int i = 1; i < n; i++) {
+            int first = s[i - 1] - '0';
+            int second = s[i] - '0';
+            if (second != 0 && first != 0) {
+                if (first * 10 + second <= 26 && first * 10 + second >= 1) {
+                    a[i] = a[i - 1] + 1;
+                } else {
+                    a[i] = a[i - 1];
+                }
+            } else if (second != 0) {
+                a[i] = a[i - 1];
+            } else if (first != 0) {
+                if (first * 10 + second <= 26 && first * 10 + second >= 1) {
+                    a[i] = a[i - 2];
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+
+        }
+        return a[n - 1];
     }
 };
