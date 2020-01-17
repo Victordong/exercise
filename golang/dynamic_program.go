@@ -123,7 +123,7 @@ func max(first int, second int) int {
 func maxProduct(nums []int) int {
 	var imax = 1
 	var imin = 1
-	var max_num = 0
+	var maxNum = 0
 	for i := 0; i < len(nums); i++ {
 		if nums[i] < 0 {
 			temp := imax
@@ -132,7 +132,7 @@ func maxProduct(nums []int) int {
 		}
 		imax = max(imax*nums[i], nums[i])
 		imin = min(imin*nums[i], nums[i])
-		max_num = max(max_num, imax)
+		maxNum = max(maxNum, imax)
 	}
 	return imax
 }
@@ -189,4 +189,45 @@ func maxProfit(prices []int) int {
 		}
 	}
 	return max
+}
+
+func findMin(nums []int) int {
+	n := len(nums)
+	if n == 0 {
+		return 0
+	}
+	if n == 1 {
+		return nums[0]
+	}
+	left := 0
+	right := n - 1
+	mid := (left + right) / 2
+	all := false
+	for left < mid {
+		if nums[left] <= nums[right] {
+			return nums[left]
+		} else {
+			if nums[left] > nums[mid] {
+				right = mid
+				mid = (left + right) / 2
+			} else if nums[mid] > nums[right] {
+				left = mid
+				mid = (left + right) / 2
+			} else {
+				all = true
+				break
+			}
+		}
+	}
+	maxNum := ^int(^uint(0) >> 1)
+	if all {
+		for i := 0; i < n; i++ {
+			if maxNum < nums[i] {
+				maxNum = nums[i]
+			}
+		}
+	} else {
+		maxNum = min(nums[left], nums[right])
+	}
+	return maxNum
 }
