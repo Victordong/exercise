@@ -191,43 +191,33 @@ func maxProfit(prices []int) int {
 	return max
 }
 
-func findMin(nums []int) int {
+func rob(nums []int) int {
 	n := len(nums)
 	if n == 0 {
 		return 0
 	}
-	if n == 1 {
-		return nums[0]
-	}
-	left := 0
-	right := n - 1
-	mid := (left + right) / 2
-	all := false
-	for left < mid {
-		if nums[left] <= nums[right] {
-			return nums[left]
-		} else {
-			if nums[left] > nums[mid] {
-				right = mid
-				mid = (left + right) / 2
-			} else if nums[mid] > nums[right] {
-				left = mid
-				mid = (left + right) / 2
-			} else {
-				all = true
-				break
-			}
-		}
-	}
-	maxNum := ^int(^uint(0) >> 1)
-	if all {
+	if n < 4 {
+		maxNum := 0
 		for i := 0; i < n; i++ {
 			if maxNum < nums[i] {
 				maxNum = nums[i]
 			}
 		}
-	} else {
-		maxNum = min(nums[left], nums[right])
+		return maxNum
 	}
-	return maxNum
+	maxWithFirst := nums[2]
+	maxWithoutFirst := nums[1]
+	pre := 0
+	for i := 2; i < n; i++ {
+		temp := maxWithoutFirst
+		maxWithoutFirst = max(maxWithoutFirst, pre+nums[i])
+		pre = temp
+	}
+	pre = 0
+	for i := 3; i < n; i++ {
+		temp := maxWithFirst
+		maxWithFirst = max(maxWithFirst, pre+nums[i])
+		pre = temp
+	}
+	return max(maxWithFirst+nums[0], maxWithoutFirst)
 }

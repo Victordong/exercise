@@ -1,6 +1,18 @@
 package main
 
+import "fmt"
+
 func main() {
-	a := []int{4, 5, 6, 7, 0, 1, 2}
-	findMin(a)
+	b := &TreeNode{
+		Val:   2,
+		Left:  nil,
+		Right: nil,
+	}
+	a := &TreeNode{
+		Val:   1,
+		Left:  b,
+		Right: nil,
+	}
+
+	fmt.Println(countNodes(a))
 }
