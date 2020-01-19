@@ -177,7 +177,7 @@ func maxProfit2(prices []int) int {
 	return b[n-1]
 }
 
-func maxProfit(prices []int) int {
+func maxProfit3(prices []int) int {
 	n := len(prices)
 	if n == 0 {
 		return 0
@@ -223,5 +223,64 @@ func rob(nums []int) int {
 }
 
 func maximalSquare(matrix [][]byte) int {
+	m := len(matrix)
+	if m == 0 {
+		return 0
+	}
+	n := len(matrix[0])
+	if n == 0 {
+		return 0
+	}
+	var dp [1000][1000]int
+	for i := 0; i < m; i++ {
+		if matrix[i][0] == '1' {
+			dp[i][0] = 1
+		} else {
+			dp[i][0] = 0
+		}
+	}
+	for i := 0; i < n; i++ {
+		if matrix[0][i] == '1' {
+			dp[0][i] = 1
+		} else {
+			dp[0][i] = 0
+		}
+	}
+	maxLength := 0
+	for i := 1; i < m; i++ {
+		for j := 1; j < n; j++ {
+			length := min(dp[i-1][j], dp[i][j-1])
+			if matrix[i-length][j-length] == '1' && matrix[i][j] == '1' {
+				dp[i][j] = length + 1
+				if maxLength < dp[i][j] {
+					maxLength = dp[i][j]
+				}
+			} else {
+				dp[i][j] = 0
+			}
+		}
+	}
+	return maxLength * maxLength
+}
 
+func maxProfit(prices []int) int {
+	n := len(prices)
+	var dp [1000][2]int
+	if len(prices) == 0 || len(prices) == 1 {
+		return 0
+	}
+	dp[0][0] = 0
+	dp[0][1] = -1 * prices[0]
+	if prices[1] > prices[0] {
+		dp[1][0] = prices[1] - prices[0]
+		dp[1][1] = -1 * prices[0]
+	} else {
+		dp[1][0] = 0
+		dp[1][1] = -1 * prices[1]
+	}
+	for i := 2; i < n; i++ {
+		dp[i][0] = max(dp[i-1][1]+prices[i], dp[i-1][0])
+		dp[i][1] = max(dp[i-1][1], dp[i-2][0]-prices[i])
+	}
+	return dp[n-1][0]
 }
