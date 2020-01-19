@@ -263,24 +263,57 @@ func maximalSquare(matrix [][]byte) int {
 	return maxLength * maxLength
 }
 
-func maxProfit(prices []int) int {
+func maxProfit4(prices []int) int {
 	n := len(prices)
-	var dp [1000][2]int
+	var curBuy int
+	var curSell int
+	var preSell int
 	if len(prices) == 0 || len(prices) == 1 {
 		return 0
 	}
-	dp[0][0] = 0
-	dp[0][1] = -1 * prices[0]
+	preSell = 0
 	if prices[1] > prices[0] {
-		dp[1][0] = prices[1] - prices[0]
-		dp[1][1] = -1 * prices[0]
+		curSell = prices[1] - prices[0]
+		curBuy = -1 * prices[0]
 	} else {
-		dp[1][0] = 0
-		dp[1][1] = -1 * prices[1]
+		curSell = 0
+		curBuy = -1 * prices[1]
 	}
 	for i := 2; i < n; i++ {
-		dp[i][0] = max(dp[i-1][1]+prices[i], dp[i-1][0])
-		dp[i][1] = max(dp[i-1][1], dp[i-2][0]-prices[i])
+		tempSell := curSell
+		curSell = max(curBuy+prices[i], curSell)
+		curBuy = max(curBuy, preSell-prices[i])
+		preSell = tempSell
 	}
-	return dp[n-1][0]
+	return curSell
+}
+
+func maxProfit5(prices []int, fee int) int {
+	n := len(prices)
+	if len(prices) == 0 || len(prices) == 1 {
+		return 0
+	}
+	var curBuy int
+	var curSell int
+	if prices[0]+fee < prices[1] {
+		curSell = prices[1] - prices[0] - fee
+		curBuy = -1*prices[0] - fee
+	} else if prices[0] < prices[1] {
+		curSell = 0
+		curBuy = -1*prices[0] - fee
+	} else {
+		curSell = 0
+		curBuy = -1*prices[1] - fee
+	}
+	for i := 2; i < n; i++ {
+		tempSell := curSell
+		tempBuy := curBuy
+		curBuy = max(tempSell-prices[i]-fee, tempBuy)
+		curSell = max(tempBuy+prices[i], tempSell)
+	}
+	return curSell
+}
+
+func maxProfit(prices []int) int {
+
 }
