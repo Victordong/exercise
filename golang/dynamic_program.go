@@ -415,26 +415,78 @@ func countSubstrings(s string) int {
 }
 
 func coinChange(coins []int, amount int) int {
-	n := len(coins)
-	var dp [1000][10000]int
-	for i := 0; i < n; i++ {
-		dp[i][0] = 0
+	if len(coins) == 0 {
+		return -1
 	}
+	var dp [10000]int
+	dp[0] = 0
 	for i := 1; i <= amount; i++ {
-		if i%coins[0] == 0 {
-			dp[0][i] = i / coins[0]
-		} else {
-			dp[0][i] = -1
-		}
-	}
-	for i := 1; i < n; i++ {
-		for j := 1; j <= amount; j++ {
-			if j > coins[i] {
-				dp[i][j] = min(dp[i-1][j-coins[i]]+1, dp[i-1][j])
-			} else {
-				dp[i][j] = dp[i-1][j]
+		minNum := amount + 1
+		for _, coin := range coins {
+			if coin <= i && dp[i-coin] != -1 {
+				minNum = min(minNum, dp[i-coin]+1)
 			}
 		}
+
+		if minNum != amount+1 {
+			dp[i] = minNum
+		} else {
+			dp[i] = -1
+		}
+
+	}
+	return dp[amount]
+}
+
+func change(amount int, coins []int) int {
+	var dp [500][5000]int
+	n := len(coins)
+	if n == 0 {
+		return 0
+	}
+	if amount == 0 {
+		return 1
+	}
+	for i := 0; i < n; i++ {
+		dp[i][0] = 1
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j <= amount; j++ {
+			fmt.Print(dp[j][i], " ")
+		}
+		fmt.Println()
+	}
+	fmt.Println()
+
+	for i := 1; i <= amount; i++ {
+		if dp[0][i]%coins[0] == 0 {
+			dp[0][i] = 1
+		} else {
+			dp[0][i] = 0
+		}
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j <= amount; j++ {
+			fmt.Print(dp[i][j], " ")
+		}
+		fmt.Println()
+	}
+	fmt.Println()
+	for j := 1; j < n; j++ {
+		for i := 1; i <= amount; i++ {
+
+			if i < coins[j] {
+				dp[j][i] = dp[j-1][i]
+			} else {
+				dp[j][i] = dp[j-1][i-coins[j]] + dp[j][i-coins[j]]
+			}
+		}
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j <= amount; j++ {
+			fmt.Print(dp[i][j], " ")
+		}
+		fmt.Println()
 	}
 	return dp[n-1][amount]
 }
