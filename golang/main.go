@@ -3,16 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	b := &TreeNode{
-		Val:   2,
-		Left:  nil,
-		Right: nil,
-	}
-	a := &TreeNode{
-		Val:   1,
-		Left:  b,
-		Right: nil,
-	}
+	a := []int{430, 360, 440, 204, 206, 194, 150, 443}
 
-	fmt.Println(countNodes(a))
+	b := 3580
+	fmt.Println(coinChange(a, b))
 }

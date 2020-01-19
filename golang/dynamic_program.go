@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func longestPalindrome(s string) string {
 	var a [1001][1001]bool
@@ -314,6 +316,125 @@ func maxProfit5(prices []int, fee int) int {
 	return curSell
 }
 
-func maxProfit(prices []int) int {
+func maxProfit6(prices []int) int {
+	n := len(prices)
+	if len(prices) == 0 || len(prices) == 1 {
+		return 0
+	}
+	var curBuy [3]int
+	var curSell [3]int
+	curSell[0] = 0
+	curBuy[0] = 0
+	if prices[1] > prices[0] {
+		for j := 1; j < 3; j++ {
+			curSell[j] = prices[1] - prices[0]
+			curBuy[j] = -1 * prices[0]
+		}
+	} else {
+		for j := 1; j < 3; j++ {
+			curSell[j] = 0
+			curBuy[j] = -1 * prices[1]
+		}
+	}
+	for i := 2; i < n; i++ {
+		for j := 1; j < 3; j++ {
+			curSell[j] = max(curBuy[j]+prices[i], curSell[j])
+			curBuy[j] = max(curSell[j-1]-prices[i], curBuy[j])
+		}
+	}
+	return curSell[2]
+}
 
+func maxProfit(k int, prices []int) int {
+	n := len(prices)
+	if len(prices) == 0 || len(prices) == 1 {
+		return 0
+	}
+	if k > n/2 {
+		result := 0
+		for i := 0; i < n-1; i++ {
+			if prices[i] < prices[i+1] {
+				result += prices[i+1] - prices[i]
+			}
+		}
+		return result
+	}
+	var curBuy [1000]int
+	var curSell [1000]int
+	curSell[0] = 0
+	curBuy[0] = 0
+	if prices[1] > prices[0] {
+		for j := 1; j <= k; j++ {
+			curSell[j] = prices[1] - prices[0]
+			curBuy[j] = -1 * prices[0]
+		}
+	} else {
+		for j := 1; j <= k; j++ {
+			curSell[j] = 0
+			curBuy[j] = -1 * prices[1]
+		}
+	}
+	for i := 2; i < n; i++ {
+		for j := 1; j <= k; j++ {
+			curSell[j] = max(curBuy[j]+prices[i], curSell[j])
+			curBuy[j] = max(curSell[j-1]-prices[i], curBuy[j])
+		}
+	}
+	return curSell[k]
+}
+
+func countSubstrings(s string) int {
+	n := len(s)
+	var dp [10][10]int
+	count := 0
+	for i := 0; i < n; i++ {
+		dp[i][i] = 1
+		count += 1
+	}
+	for i := 0; i < n-1; i++ {
+		if s[i] == s[i+1] {
+			dp[i][i+1] = 1
+			count += 1
+		}
+	}
+	for m := 2; m < n; m++ {
+		for i := 0; i < n; i++ {
+			j := m + i
+			if j >= n {
+				break
+			}
+			if s[i] == s[j] && dp[i+1][j-1] == 1 {
+				dp[i][j] = 1
+				count += 1
+			} else {
+				dp[i][j] = 0
+			}
+		}
+	}
+	return count
+}
+
+func coinChange(coins []int, amount int) int {
+	n := len(coins)
+	var dp [1000][10000]int
+	for i := 0; i < n; i++ {
+		dp[i][0] = 0
+	}
+	for i := 1; i <= amount; i++ {
+		if i%coins[0] == 0 {
+			dp[0][i] = i / coins[0]
+		} else {
+			dp[0][i] = -1
+		}
+	}
+	for i := 1; i < n; i++ {
+		for j := 1; j <= amount; j++ {
+			if j > coins[i] {
+				dp[i][j] = min(dp[i-1][j-coins[i]]+1, dp[i-1][j])
+			} else {
+				dp[i][j] = dp[i-1][j]
+			}
+		}
+	}
+	return dp[n-1][amount]
 }
