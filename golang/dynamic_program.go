@@ -427,7 +427,6 @@ func coinChange(coins []int, amount int) int {
 				minNum = min(minNum, dp[i-coin]+1)
 			}
 		}
-
 		if minNum != amount+1 {
 			dp[i] = minNum
 		} else {
@@ -439,54 +438,33 @@ func coinChange(coins []int, amount int) int {
 }
 
 func change(amount int, coins []int) int {
-	var dp [500][5000]int
+	var dp [5001]int
 	n := len(coins)
-	if n == 0 {
-		return 0
-	}
 	if amount == 0 {
 		return 1
 	}
-	for i := 0; i < n; i++ {
-		dp[i][0] = 1
+	if n == 0 {
+		return 0
 	}
-	for i := 0; i < n; i++ {
-		for j := 0; j <= amount; j++ {
-			fmt.Print(dp[j][i], " ")
-		}
-		fmt.Println()
-	}
-	fmt.Println()
 
-	for i := 1; i <= amount; i++ {
-		if dp[0][i]%coins[0] == 0 {
-			dp[0][i] = 1
+	dp[0] = 1
+	for i := 0; i <= amount; i++ {
+		if i%coins[0] == 0 {
+			dp[i] = 1
 		} else {
-			dp[0][i] = 0
+			dp[i] = 0
 		}
 	}
-	for i := 0; i < n; i++ {
-		for j := 0; j <= amount; j++ {
-			fmt.Print(dp[i][j], " ")
-		}
-		fmt.Println()
-	}
-	fmt.Println()
 	for j := 1; j < n; j++ {
 		for i := 1; i <= amount; i++ {
 
-			if i < coins[j] {
-				dp[j][i] = dp[j-1][i]
-			} else {
-				dp[j][i] = dp[j-1][i-coins[j]] + dp[j][i-coins[j]]
+			if i >= coins[j] {
+				dp[i] = dp[i] + dp[i-coins[j]]
 			}
 		}
 	}
-	for i := 0; i < n; i++ {
-		for j := 0; j <= amount; j++ {
-			fmt.Print(dp[i][j], " ")
-		}
-		fmt.Println()
+	for i := 0; i <= amount; i++ {
+		fmt.Print(dp[i], " ")
 	}
-	return dp[n-1][amount]
+	return dp[amount]
 }
