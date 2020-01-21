@@ -468,3 +468,78 @@ func change(amount int, coins []int) int {
 	}
 	return dp[amount]
 }
+
+func lengthOfLIS(nums []int) int {
+	n := len(nums)
+	print(n)
+	if n == 0 {
+		return 0
+	}
+	var dp [1000]int
+	for i := 0; i < n; i++ {
+		dp[i] = 1
+	}
+	for i := 1; i < n; i++ {
+		maxNum := 0
+		for j := i - 1; j >= 0; j-- {
+			if nums[i] > nums[j] {
+				if maxNum < dp[j] {
+					maxNum = dp[j]
+				}
+			}
+		}
+		dp[i] = maxNum + 1
+	}
+	max := dp[0]
+	for i := 1; i < n; i++ {
+		if max < dp[i] {
+			max = dp[i]
+		}
+	}
+
+	return max
+}
+
+func mincostTickets(days []int, costs []int) int {
+	n := len(days)
+	if n == 0 {
+		return 0
+	}
+	var dp [1000]int
+	dp[0] = 0
+	dp[1] = min(costs[0], min(costs[1], costs[2]))
+	for i := 2; i <= n; i++ {
+		var index1 int
+		var index2 int
+		if days[i-1] <= 7 {
+			index1 = 0
+			index2 = 0
+		} else if days[i-1] <= 30 {
+			j := i - 2
+			index1 = i - 1
+			for ; j >= 0; j-- {
+				if days[i-1]-days[j] < 7 {
+					index1 = j
+				}
+			}
+			index2 = 0
+		} else {
+			j := i - 2
+			index1 = i - 1
+			for ; j >= 0; j-- {
+				if days[i-1]-days[j] < 7 {
+					index1 = j
+				}
+			}
+			j = i - 2
+			index2 = j
+			for ; j >= 0; j-- {
+				if days[i-1]-days[j] < 30 {
+					index2 = j
+				}
+			}
+		}
+		dp[i] = min(dp[i-1]+costs[0], min(dp[index1]+costs[1], dp[index2]+costs[2]))
+	}
+	return dp[n]
+}

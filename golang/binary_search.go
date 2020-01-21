@@ -41,12 +41,6 @@ func findMin(nums []int) int {
 	return maxNum
 }
 
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
-}
-
 func pow(base int, times int) int {
 	sum := 1
 	for times > 0 {
