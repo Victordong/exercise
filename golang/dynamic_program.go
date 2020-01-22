@@ -85,10 +85,6 @@ func uniquePathsWithObstacles(obstacleGrid [][]int) int {
 	return a[m-1][n-1]
 }
 
-func wordBreak(s string, wordDict []string) bool {
-	return false
-}
-
 func minimumTotal(triangle [][]int) int {
 	for i := 1; i < len(triangle); i++ {
 		triangle[i][0] += triangle[i-1][0]
@@ -463,13 +459,10 @@ func change(amount int, coins []int) int {
 			}
 		}
 	}
-	for i := 0; i <= amount; i++ {
-		fmt.Print(dp[i], " ")
-	}
 	return dp[amount]
 }
 
-func lengthOfLIS(nums []int) int {
+func lengthOfLIS1(nums []int) int {
 	n := len(nums)
 	print(n)
 	if n == 0 {
@@ -482,10 +475,8 @@ func lengthOfLIS(nums []int) int {
 	for i := 1; i < n; i++ {
 		maxNum := 0
 		for j := i - 1; j >= 0; j-- {
-			if nums[i] > nums[j] {
-				if maxNum < dp[j] {
-					maxNum = dp[j]
-				}
+			if nums[i] > nums[j] && maxNum < dp[j] {
+				maxNum = dp[j]
 			}
 		}
 		dp[i] = maxNum + 1
@@ -540,6 +531,260 @@ func mincostTickets(days []int, costs []int) int {
 			}
 		}
 		dp[i] = min(dp[i-1]+costs[0], min(dp[index1]+costs[1], dp[index2]+costs[2]))
+	}
+	return dp[n]
+}
+
+func lengthOfLIS(nums []int) int {
+	n := len(nums)
+	if n == 0 {
+		return 0
+	}
+	var dp [2500]int
+	dp[0] = nums[0]
+	maxLength := 1
+	for m := 1; m < len(nums); m++ {
+		var mid int
+		i, j := 0, maxLength
+		for i < j {
+			mid = (i + j) / 2
+			if dp[mid] < nums[m] {
+				i = mid + 1
+			} else {
+				j = mid
+			}
+		}
+		if j == maxLength && nums[m] != dp[maxLength-1] {
+			dp[maxLength] = nums[m]
+			maxLength += 1
+		} else {
+			dp[i] = nums[m]
+		}
+	}
+	return maxLength
+}
+
+func findNumberOfLIS(nums []int) int {
+	n := len(nums)
+	print(n)
+	if n == 0 {
+		return 0
+	}
+	var dp [1000]int
+	var count [1000]int
+	for i := 0; i < n; i++ {
+		dp[i] = 1
+		count[i] = 1
+	}
+	for i := 1; i < n; i++ {
+		maxNum := 0
+		maxSum := 0
+		for j := i - 1; j >= 0; j-- {
+			if nums[i] > nums[j] && maxNum < dp[j] {
+				maxNum = dp[j]
+				maxSum = count[j]
+			} else if nums[i] > nums[j] && maxNum == dp[j] {
+				maxSum += count[j]
+			}
+		}
+		dp[i] = maxNum + 1
+		if maxSum != 0 {
+			count[i] = maxSum
+		}
+	}
+	max := dp[0]
+	number := count[1]
+	for i := 1; i < n; i++ {
+		if max < dp[i] {
+			max = dp[i]
+			number = count[i]
+		} else if max == dp[i] {
+			number += count[i]
+		}
+	}
+	return number
+}
+
+func longestCommonSubsequence(text1 string, text2 string) int {
+	m := len(text1)
+	n := len(text2)
+	var dp [1000][1000]int
+	equal := false
+	for i := 0; i < m; i++ {
+		if text1[i] == text2[0] {
+			equal = true
+		}
+		if !equal {
+			dp[i][0] = 0
+		} else {
+			dp[i][0] = 1
+		}
+	}
+	equal = false
+	for i := 0; i < n; i++ {
+		if text2[i] == text1[0] {
+			equal = true
+		}
+		if !equal {
+			dp[0][i] = 0
+		} else {
+			dp[0][i] = 1
+		}
+	}
+	for i := 1; i < m; i++ {
+		for j := 1; j < n; j++ {
+			if text1[i] == text2[j] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+	return dp[m-1][n-1]
+}
+
+func countSquares(matrix [][]int) int {
+	n := len(matrix)
+	if n == 0 {
+		return 0
+	}
+	m := len(matrix[0])
+	if m == 0 {
+		return 0
+	}
+	var dp [301][301]int
+	for i := 0; i < n; i++ {
+		if matrix[i][0] == 1 {
+			dp[i][0] = 1
+		} else {
+			dp[i][0] = 0
+		}
+	}
+	for i := 0; i < m; i++ {
+		if matrix[0][i] == 1 {
+			dp[0][i] = 1
+		} else {
+			dp[0][i] = 0
+		}
+	}
+	for i := 1; i < n; i++ {
+		for j := 1; j < m; j++ {
+			length := min(dp[i-1][j], dp[i][j-1])
+			if matrix[i][j] == 0 {
+				dp[i][j] = 0
+			} else {
+				if matrix[i-length][j-length] == 1 {
+					dp[i][j] = length + 1
+				} else {
+					dp[i][j] = length
+				}
+			}
+		}
+	}
+	result := 0
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			result += dp[i][j]
+		}
+	}
+	return result
+}
+
+func minDistance(word1 string, word2 string) int {
+	n := len(word1)
+	m := len(word2)
+	var dp [1000][1000]int
+	for i := 0; i <= n; i++ {
+		dp[i][0] = i
+	}
+	for i := 0; i <= m; i++ {
+		dp[0][i] = i
+	}
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= m; j++ {
+			if word1[i-1] == word2[j-1] {
+				dp[i][j] = min(dp[i-1][j]+1, min(dp[i][j-1]+1, dp[i-1][j-1]))
+			} else {
+				dp[i][j] = min(dp[i-1][j]+1, min(dp[i][j-1]+1, dp[i-1][j-1]+1))
+			}
+		}
+	}
+	return dp[n][m]
+}
+
+func climbStairs(n int) int {
+	pre, cur := 1, 2
+	if n == 0 {
+		return 1
+	} else if n == 1 {
+		return pre
+	} else if n == 2 {
+		return cur
+	}
+	for i := 3; i <= n; i++ {
+		temp := cur
+		cur = cur + pre
+		pre = temp
+	}
+	return cur
+}
+
+func PredictTheWinner(nums []int) bool {
+	n := len(nums)
+	if n == 0 || n == 1 || n == 2 {
+		return true
+	}
+	var dp [21][21]int
+	dp[0][0] = nums[0]
+	for i := 1; i < n; i++ {
+		dp[i][i] = nums[i]
+		dp[i-1][i] = max(nums[i-1], nums[i]) - min(nums[i-1], nums[i])
+	}
+	for m := 2; m < n; m++ {
+		for i := 0; i < n; i++ {
+			j := i + m
+			if j >= n {
+				break
+			}
+			dp[i][j] = max(nums[i]-dp[i+1][j], nums[j]-dp[i][j-1])
+		}
+	}
+	if dp[0][n-1] >= 0 {
+		return true
+	}
+	return false
+}
+
+func contains(s string, wordDict []string) bool {
+	for _, str := range wordDict {
+		if s == str {
+			return true
+		}
+	}
+	return false
+}
+
+func wordBreak(s string, wordDict []string) bool {
+	n := len(s)
+	m := len(wordDict)
+	if n == 0 {
+		return true
+	}
+	if m == 0 {
+		return false
+	}
+	var dp [1000]bool
+	dp[0] = true
+	for i := 1; i <= n; i++ {
+		dp[i] = false
+	}
+	for i := 0; i < n; i++ {
+		for j := i + 1; j <= n; j++ {
+			newString := s[i:j]
+			if dp[i] == true && contains(newString, wordDict) {
+				dp[j] = true
+			}
+		}
 	}
 	return dp[n]
 }

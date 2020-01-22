@@ -192,7 +192,7 @@ func isValidBST(root *TreeNode) bool {
 		cur = trees[len(trees)-1]
 		trees = trees[:len(trees)-1]
 		result = append(result, cur.Val)
-		for cur.Right != nil && len(trees) != 0 {
+		for cur.Right == nil && len(trees) != 0 {
 			cur = trees[len(trees)-1]
 			trees = trees[:len(trees)-1]
 			result = append(result, cur.Val)
@@ -208,4 +208,18 @@ func isValidBST(root *TreeNode) bool {
 		}
 	}
 	return true
+}
+
+func kthSmallest(matrix [][]int, k int) int {
+	n := len(matrix)
+	var i int
+	var j int
+	if k%n == 0 {
+		i = k/n - 1
+		j = n
+	} else {
+		i = k/n - 1
+		j = k - i*n - 1
+	}
+	return matrix[i][j]
 }
