@@ -88,24 +88,6 @@ func countNodes(root *TreeNode) int {
 	return partCount(root, height)
 }
 
-//func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
-//	n := len(nums1)
-//	m := len(nums2)
-//	var find1, find2 int
-//	if (n+m)%2 ==1 {
-//		find1 = (n+m)/2+1
-//		find2 = find1
-//	} else {
-//		find1 = (n+m)/2
-//		find2 = (n+m)/3
-//	}
-//	i, j := 0, 0
-//	for i < n && j < m {
-//
-//	}
-//
-//}
-
 func searchRange(nums []int, target int) []int {
 	n := len(nums)
 	left, right := 0, n
