@@ -1,6 +1,6 @@
 package main
 
 func main() {
-	a := 30
-	integerBreak(a)
+	data := [][]int{{1, 2}, {1, 3}}
+	print(kthSmallest(data, 4))
 }

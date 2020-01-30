@@ -1,21 +1,26 @@
 package main
 
-import (
-	"fmt"
-)
-
 func longestPalindrome(s string) string {
-	var a [1001][1001]bool
+	var a [1001][1001]int
 	n := len(s)
 	if n == 0 {
 		return s
 	}
 	for i := 0; i < n; i++ {
-		a[i][i] = true
+		a[i][i] = 1
 	}
+	begin, end := 0, 0
+	maxLen := 1
 	for i := 1; i < n; i++ {
 		if s[i] == s[i-1] {
-			a[i-1][i] = true
+			a[i-1][i] = 2
+		} else {
+			a[i-1][i] = 0
+		}
+		if maxLen < a[i-1][i] {
+			begin = i - 1
+			end = i
+			maxLen = a[i-1][i]
 		}
 	}
 	for m := 2; m < n; m++ {
@@ -24,26 +29,18 @@ func longestPalindrome(s string) string {
 			if j >= n {
 				break
 			}
-			if s[i] == s[j] && a[i+1][j-1] {
-				a[i][j] = true
+			if s[i] == s[j] && a[i+1][j-1] != 0 {
+				a[i][j] = a[i+1][j-1] + 2
+				if maxLen < a[i][j] {
+					begin = i
+					end = j
+					maxLen = a[i][j]
+				}
 			} else {
-				a[i][j] = false
+				a[i][j] = 0
 			}
 		}
 	}
-	max := -1
-	begin := 0
-	end := 0
-	for i := 0; i < n; i++ {
-		for j := i; j < n; j++ {
-			if a[i][j] && j-i > max {
-				max = j - i
-				begin = i
-				end = j
-			}
-		}
-	}
-	fmt.Println(begin, end)
 	return s[begin : end+1]
 }
 

@@ -210,16 +210,77 @@ func isValidBST(root *TreeNode) bool {
 	return true
 }
 
-func kthSmallest(matrix [][]int, k int) int {
-	n := len(matrix)
-	var i int
-	var j int
-	if k%n == 0 {
-		i = k/n - 1
-		j = n
-	} else {
-		i = k/n - 1
-		j = k - i*n - 1
+func kthSmallest2(root *TreeNode, k int) int {
+	trees := make([]*TreeNode, 0)
+	trees = append(trees, root)
+	cur := root
+	for len(trees) != 0 {
+		for cur.Left != nil {
+			trees = append(trees, cur.Left)
+			cur = cur.Left
+		}
+		cur = trees[len(trees)-1]
+		trees = trees[:len(trees)-1]
+		if k > 1 {
+			k -= 1
+		} else {
+			return cur.Val
+		}
+		for cur.Right == nil && len(trees) != 0 {
+			cur = trees[len(trees)-1]
+			trees = trees[:len(trees)-1]
+			if k > 1 {
+				k -= 1
+			} else {
+				return cur.Val
+			}
+		}
+		if cur.Right != nil {
+			cur = cur.Right
+			trees = append(trees, cur)
+		}
 	}
-	return matrix[i][j]
+	return -1
+}
+
+func reverse(s []int) []int {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+func zigzagLevelOrder(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+	result := make([][]int, 0)
+	trees := make([]*TreeNode, 0)
+	trees = append(trees, root)
+	end, nextEnd := root, root
+	partResult := make([]int, 0)
+	earse := false
+	for len(trees) != 0 {
+		cur := trees[0]
+		trees = trees[1:]
+		partResult = append(partResult, cur.Val)
+		if cur.Left != nil {
+			nextEnd = cur.Left
+			trees = append(trees, cur.Left)
+		}
+		if cur.Right != nil {
+			nextEnd = cur.Right
+			trees = append(trees, cur.Right)
+		}
+		if cur == end {
+			end = nextEnd
+			if earse {
+				partResult = reverse(partResult)
+			}
+			result = append(result, partResult)
+			partResult = make([]int, 0)
+			earse = !earse
+		}
+	}
+	return result
 }
