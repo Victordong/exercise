@@ -1,6 +1,7 @@
 package main
 
 func main() {
-	data := [][]int{{1, 2}, {1, 3}}
-	print(kthSmallest(data, 4))
+	price := [][]int{{0, 1, 1}, {0, 2, 5}, {1, 2, 1}, {2, 3, 1}}
+
+	print(findCheapestPrice(4, price, 0, 3, 1))
 }

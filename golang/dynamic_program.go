@@ -785,3 +785,177 @@ func wordBreak(s string, wordDict []string) bool {
 	}
 	return dp[n]
 }
+
+func longestPalindromeSubseq(s string) int {
+	n := len(s)
+	dp := make([][]int, 0)
+	for i := 0; i < n; i++ {
+		partDp := make([]int, n)
+		dp = append(dp, partDp)
+	}
+	for i := 0; i < n; i++ {
+		dp[i][i] = 1
+	}
+	for i := 1; i < n; i++ {
+		if s[i-1] == s[i] {
+			dp[i-1][i] = 2
+		} else {
+			dp[i-1][i] = 1
+		}
+	}
+	for i := n - 2; i >= 1; i-- {
+		for j := i + 1; j < n; j++ {
+			if s[i] == s[j] {
+				dp[i][j] = dp[i+1][j-1] + 2
+			} else {
+				dp[i][j] = max(dp[i+1][j], dp[i][j-1])
+			}
+		}
+	}
+	return dp[0][n-1]
+}
+
+func wiggleMaxLength(nums []int) int {
+	n := len(nums)
+	var total int
+	if len(nums) < 2 {
+		return len(nums)
+	}
+	var trend bool
+	total = 1
+	j := 1
+	for ; j < n; j++ {
+		if nums[j] < nums[j-1] {
+			trend = false
+			total = 2
+			break
+		} else if nums[j] > nums[j-1] {
+			trend = true
+			total = 2
+			break
+		}
+	}
+	for i := j + 1; i < n; i++ {
+		if trend && nums[i] < nums[i-1] {
+			total += 1
+			trend = false
+		}
+		if !trend && nums[i] > nums[i-1] {
+			total += 1
+			trend = true
+		}
+	}
+	return total
+}
+
+func findLength(A []int, B []int) int {
+	n := len(A)
+	m := len(B)
+	max := 0
+	var dp [1000][1000]int
+	for i := 0; i < n; i++ {
+		if A[i] == B[0] {
+			dp[i][0] = 1
+		}
+	}
+	for i := 0; i < m; i++ {
+		if A[0] == B[i] {
+			dp[0][i] = 1
+		}
+	}
+
+	for i := 1; i < n; i++ {
+		for j := 1; j < m; j++ {
+			if A[i] == B[j] {
+				dp[i][j] = dp[i-1][j-1] + 1
+				if max < dp[i][j] {
+					max = dp[i][j]
+				}
+			}
+		}
+	}
+
+	return max
+}
+
+func stoneGame(piles []int) bool {
+	var dp [500][500]int
+	n := len(piles)
+	if n <= 2 {
+		return true
+	}
+	for i := 0; i < n; i++ {
+		dp[i][i] = piles[i]
+	}
+	for i := 1; i < n; i++ {
+		dp[i-1][i] = max(piles[i-1], piles[i]) - min(piles[i-1], piles[i])
+	}
+	for m := 2; m < n; m++ {
+		for i := 0; i < n-m; i++ {
+			j := i + m
+			dp[i][j] = max(piles[i]-dp[i+1][j], piles[j]-dp[i][j-1])
+		}
+	}
+	if dp[0][n-1] > 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func stoneGameII(piles []int) int {
+	n := len(piles)
+	var dp [101][101]int
+	sum := 0
+	for i := n - 1; i >= 0; i++ {
+		sum += piles[i]
+		for j := 0; j <= n; j++ {
+			if i+2*j >= n {
+				dp[i][j] = sum
+			} else {
+				for x := 1; i+x < n && x <= 2*j; x++ {
+					dp[i][j] = max(dp[i][j], sum-dp[i+x][max(j, x)])
+				}
+			}
+		}
+	}
+	return dp[0][1]
+}
+
+func findCheapestPrice(n int, flights [][]int, src int, dst int, K int) int {
+	var mapPrice [101][101]int
+	var temp [101][101]int
+
+	for _, value := range flights {
+		mapPrice[value[0]][value[1]] = value[2]
+	}
+	for times := 1; times <= K; times++ {
+		canReach := make([]int, 0)
+		for i := 0; i < n; i++ {
+			if mapPrice[src][i] != 0 {
+				canReach = append(canReach, i)
+			}
+		}
+		for i := 0; i < n; i++ {
+			for j := 0; j < n; j++ {
+				temp[i][j] = mapPrice[i][j]
+			}
+		}
+		for _, value := range canReach {
+			for i := 0; i < n; i++ {
+				if temp[value][i] != 0 && i != src {
+					if temp[src][i] == 0 {
+						mapPrice[src][i] = temp[src][value] + temp[value][i]
+					} else {
+						mapPrice[src][i] = min(temp[src][value]+temp[value][i], mapPrice[src][i])
+					}
+				}
+			}
+		}
+	}
+	if mapPrice[src][dst] == 0 {
+		return -1
+	} else {
+		return mapPrice[src][dst]
+	}
+}
