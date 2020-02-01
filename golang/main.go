@@ -1,7 +1,6 @@
 package main
 
 func main() {
-	price := [][]int{{0, 1, 1}, {0, 2, 5}, {1, 2, 1}, {2, 3, 1}}
-
-	print(findCheapestPrice(4, price, 0, 3, 1))
+	A := []int{0, 8, 45, 88, 48, 68, 28, 55, 17, 24}
+	print(maxTurbulenceSize(A))
 }

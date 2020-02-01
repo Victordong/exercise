@@ -186,7 +186,7 @@ func maxProfit3(prices []int) int {
 	return max
 }
 
-func rob(nums []int) int {
+func rob1(nums []int) int {
 	n := len(nums)
 	if n == 0 {
 		return 0
@@ -924,38 +924,91 @@ func stoneGameII(piles []int) int {
 
 func findCheapestPrice(n int, flights [][]int, src int, dst int, K int) int {
 	var mapPrice [101][101]int
-	var temp [101][101]int
-
 	for _, value := range flights {
-		mapPrice[value[0]][value[1]] = value[2]
+		if value[0] == src {
+			mapPrice[0][value[1]] = value[2]
+		}
 	}
-	for times := 1; times <= K; times++ {
-		canReach := make([]int, 0)
+	for k := 1; k <= K; k++ {
 		for i := 0; i < n; i++ {
-			if mapPrice[src][i] != 0 {
-				canReach = append(canReach, i)
-			}
+			mapPrice[k][i] = mapPrice[k-1][i]
 		}
-		for i := 0; i < n; i++ {
-			for j := 0; j < n; j++ {
-				temp[i][j] = mapPrice[i][j]
-			}
-		}
-		for _, value := range canReach {
-			for i := 0; i < n; i++ {
-				if temp[value][i] != 0 && i != src {
-					if temp[src][i] == 0 {
-						mapPrice[src][i] = temp[src][value] + temp[value][i]
-					} else {
-						mapPrice[src][i] = min(temp[src][value]+temp[value][i], mapPrice[src][i])
-					}
+		for _, value := range flights {
+			if mapPrice[k-1][value[0]] != 0 && value[1] != src {
+				if mapPrice[k][value[1]] == 0 {
+					mapPrice[k][value[1]] = mapPrice[k-1][value[0]] + value[2]
+				} else {
+					mapPrice[k][value[1]] = min(mapPrice[k-1][value[0]]+value[2], mapPrice[k][value[1]])
 				}
 			}
 		}
 	}
-	if mapPrice[src][dst] == 0 {
-		return -1
+	if mapPrice[K][dst] != 0 {
+		return mapPrice[K][dst]
 	} else {
-		return mapPrice[src][dst]
+		return -1
 	}
+}
+
+func rob(nums []int) int {
+	n := len(nums)
+	if n < 1 {
+		return 0
+	}
+	pre, cur := 0, nums[0]
+	for i := 1; i < n; i++ {
+		temp := cur
+		cur = max(cur, pre+nums[i])
+		pre = temp
+	}
+	return cur
+}
+
+func maxTurbulenceSize(A []int) int {
+	n := len(A)
+	if n == 0 {
+		return 0
+	}
+	var trend bool
+	cur := 1
+	total := 1
+	for ; cur < n; cur++ {
+		if A[cur-1] < A[cur] {
+			trend = true
+			total += 1
+			break
+		} else if A[cur-1] > A[cur] {
+			trend = false
+			total += 1
+			break
+		}
+	}
+	maxNumber := total
+	for i := cur + 1; i < n; i++ {
+		if trend && A[i] < A[i-1] {
+			total += 1
+			trend = false
+		} else if !trend && A[i] > A[i-1] {
+			total += 1
+			trend = true
+		} else if A[i] == A[i-1] {
+			maxNumber = max(maxNumber, total)
+			total = 1
+		} else {
+			maxNumber = max(maxNumber, total)
+			total = 2
+		}
+	}
+	return max(maxNumber, total)
+}
+
+func numTrees(n int) int {
+	g := make([]int, n+1)
+	g[0], g[1] = 1, 1
+	for i := 2; i <= n; i++ {
+		for j := 1; j <= i; j++ {
+			g[i] += g[j-1] * g[i-j]
+		}
+	}
+	return g[n]
 }
