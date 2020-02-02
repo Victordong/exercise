@@ -286,5 +286,17 @@ func zigzagLevelOrder(root *TreeNode) [][]int {
 }
 
 func buildTree(preorder []int, inorder []int) *TreeNode {
-
+	preMap := make(map[int]int)
+	for index, value := range preorder {
+		preMap[value] = index
+	}
+	inMap := make(map[int]int)
+	for index, value := range inorder {
+		inMap[value] = index
+	}
+	root := new(TreeNode)
+	cur := root
+	preIndex := 0
+	curIndex := inMap[preorder[preIndex]]
+	cur.Val = preorder[preIndex]
 }
