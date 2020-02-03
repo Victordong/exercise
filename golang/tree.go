@@ -285,18 +285,86 @@ func zigzagLevelOrder(root *TreeNode) [][]int {
 	return result
 }
 
-func buildTree(preorder []int, inorder []int) *TreeNode {
-	preMap := make(map[int]int)
-	for index, value := range preorder {
-		preMap[value] = index
+func partBuildTree1(preorder []int, inMap map[int]int, left int, right int, index *int) *TreeNode {
+	if left > right {
+		return nil
+	}
+	newNode := new(TreeNode)
+	number := preorder[*index]
+	*index += 1
+	cur := inMap[number]
+	leftNode := partBuildTree1(preorder, inMap, left, cur-1, index)
+	rightNode := partBuildTree1(preorder, inMap, cur+1, right, index)
+	newNode.Val, newNode.Left, newNode.Right = number, leftNode, rightNode
+	return newNode
+}
+
+func buildTree1(preorder []int, inorder []int) *TreeNode {
+	n := len(preorder)
+	if n == 0 {
+		return nil
 	}
 	inMap := make(map[int]int)
 	for index, value := range inorder {
 		inMap[value] = index
 	}
-	root := new(TreeNode)
+	a := 0
+	root := partBuildTree1(preorder, inMap, 0, n-1, &a)
+	return root
+}
+
+func partBuildTree(postorder []int, inMap map[int]int, left int, right int, index *int) *TreeNode {
+	if left > right {
+		return nil
+	}
+	newNode := new(TreeNode)
+	number := postorder[*index]
+	*index -= 1
+	cur := inMap[number]
+	rightNode := partBuildTree(postorder, inMap, cur+1, right, index)
+	leftNode := partBuildTree(postorder, inMap, left, cur-1, index)
+	newNode.Val, newNode.Left, newNode.Right = number, leftNode, rightNode
+	return newNode
+}
+
+func buildTree(inorder []int, postorder []int) *TreeNode {
+	n := len(postorder)
+	if n == 0 {
+		return nil
+	}
+	inMap := make(map[int]int)
+	for index, value := range inorder {
+		inMap[value] = index
+	}
+	a := n - 1
+	root := partBuildTree(postorder, inMap, 0, n-1, &a)
+	return root
+}
+
+func insertIntoBST(root *TreeNode, val int) *TreeNode {
 	cur := root
-	preIndex := 0
-	curIndex := inMap[preorder[preIndex]]
-	cur.Val = preorder[preIndex]
+	temp := cur
+	for {
+		if cur == nil {
+			break
+		}
+		if cur.Val < val {
+			temp = cur
+			cur = cur.Right
+		} else {
+			temp = cur
+			cur = cur.Left
+		}
+	}
+	newNode := new(TreeNode)
+	newNode.Val, newNode.Left, newNode.Right = val, nil, nil
+	if temp == nil {
+		return newNode
+	}
+	if temp.Val > val {
+		temp.Left = newNode
+	} else {
+		temp.Right = newNode
+	}
+	return root
 }
