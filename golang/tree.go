@@ -368,3 +368,31 @@ func insertIntoBST(root *TreeNode, val int) *TreeNode {
 	}
 	return root
 }
+
+func partRob(root *TreeNode, robMap map[*TreeNode]int) int {
+	if root == nil {
+		return 0
+	}
+	if _, ok := robMap[root]; ok {
+		return robMap[root]
+	}
+	var robLeft, robRight int
+	if root.Left == nil {
+		robLeft = 0
+	} else {
+		robLeft = partRob(root.Left.Left, robMap) + partRob(root.Left.Right, robMap)
+	}
+	if root.Right == nil {
+		robRight = 0
+	} else {
+		robRight = partRob(root.Right.Left, robMap) + partRob(root.Right.Right, robMap)
+	}
+	robValue := max(robRight+robLeft+root.Val, partRob(root.Left, robMap)+partRob(root.Right, robMap))
+	robMap[root] = robValue
+	return robValue
+}
+
+func rob(root *TreeNode) int {
+	robMap := make(map[*TreeNode]int)
+	return partRob(root, robMap)
+}

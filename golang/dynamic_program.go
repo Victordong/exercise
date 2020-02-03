@@ -186,7 +186,7 @@ func maxProfit3(prices []int) int {
 	return max
 }
 
-func rob1(nums []int) int {
+func rob2(nums []int) int {
 	n := len(nums)
 	if n == 0 {
 		return 0
@@ -950,7 +950,7 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, K int) int {
 	}
 }
 
-func rob(nums []int) int {
+func rob1(nums []int) int {
 	n := len(nums)
 	if n < 1 {
 		return 0
