@@ -63,31 +63,24 @@ func reverseList(head *ListNode) *ListNode {
 }
 
 func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
-	var head, cur1, cur2, pre, temp *ListNode
-	if l1 == nil {
-		return l2
-	} else if l2 == nil {
-		return l1
-	}
-	if l1.Val <= l2.Val {
-		head, cur1, cur2, pre = l1, l1, l2, l1
-	} else {
-		head, cur1, cur2, pre = l2, l2, l1, l2
-	}
-	for cur1 != nil && cur2 != nil {
-		if cur1.Val <= cur2.Val {
-			pre, cur1 = cur1, cur1.Next
+	head := new(ListNode)
+	cur := head
+	for l1 != nil && l2 != nil {
+		if l1.Val <= l2.Val {
+			cur.Next = l1
+			l1 = l1.Next
 		} else {
-			pre.Next, temp, pre = cur2, cur2.Next, cur2
-			cur2.Next, cur2 = cur1, temp
+			cur.Next = l2
+			l2 = l2.Next
 		}
+		cur = cur.Next
 	}
-	if cur1 == nil {
-		pre.Next = cur2
-	} else if cur2 == nil {
-		pre.Next = cur1
+	if l1 == nil {
+		cur.Next = l2
+	} else {
+		cur.Next = l1
 	}
-	return head
+	return head.Next
 }
 
 func reverseKGroup(head *ListNode, k int) *ListNode {
@@ -129,4 +122,40 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 		total = k
 	}
 	return result
+}
+
+func partMerge(l1 *ListNode, l2 *ListNode) *ListNode {
+	head := new(ListNode)
+	cur := head
+	for l1 != nil && l2 != nil {
+		if l1.Val <= l2.Val {
+			cur.Next = l1
+			l1 = l1.Next
+		} else {
+			cur.Next = l2
+			l2 = l2.Next
+		}
+		cur = cur.Next
+	}
+	if l1 == nil {
+		cur.Next = l2
+	} else {
+		cur.Next = l1
+	}
+	return head.Next
+}
+
+func mergeKLists(lists []*ListNode) *ListNode {
+	n := len(lists)
+	if n == 0 {
+		return nil
+	}
+	iter := 1
+	for iter < n {
+		for i := 0; i+iter < n; i += iter * 2 {
+			lists[i] = partMerge(lists[i+iter], lists[i])
+		}
+		iter *= 2
+	}
+	return lists[0]
 }

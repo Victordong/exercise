@@ -25,3 +25,27 @@ func dailyTemperatures(T []int) []int {
 	}
 	return result
 }
+
+func isValid(s string) bool {
+	wordStack := make([]byte, 0)
+	var temp byte
+	for i := 0; i < len(s); i++ {
+		if s[i] == '(' || s[i] == '[' || s[i] == '{' {
+			wordStack = append(wordStack, s[i])
+		} else {
+			if len(wordStack) == 0 {
+				return false
+			}
+			temp = wordStack[len(wordStack)-1]
+			wordStack = wordStack[:len(wordStack)-1]
+			if (s[i] == ')' && temp != '(') || (s[i] == '}' && temp != '{') || (s[i] == ']' && temp != '[') {
+				return false
+			}
+		}
+	}
+	if len(wordStack) == 0 {
+		return true
+	} else {
+		return false
+	}
+}
