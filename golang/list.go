@@ -89,3 +89,44 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 	return head
 }
+
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	var result *ListNode
+	var cur, last, nextLast *ListNode = nil, nil, head
+	pre := head
+	total := k
+	for pre != nil {
+		cur = nil
+		for pre != nil && total > 0 {
+			temp := pre.Next
+			pre.Next = cur
+			cur = pre
+			pre = temp
+			total -= 1
+		}
+		if total == 0 && last != nil {
+			last.Next = cur
+			last = nextLast
+			nextLast = pre
+		} else if total == 0 {
+			last = nextLast
+			result = cur
+			nextLast = pre
+		} else {
+			pre, cur = cur, nil
+			for pre != nil {
+				temp := pre.Next
+				pre.Next = cur
+				cur = pre
+				pre = temp
+			}
+			if last != nil {
+				last.Next = cur
+			} else {
+				result = cur
+			}
+		}
+		total = k
+	}
+	return result
+}

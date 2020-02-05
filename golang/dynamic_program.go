@@ -1073,15 +1073,3 @@ func maxSubArray(nums []int) int {
 	}
 	return maxNumber
 }
-
-func partFindMedia(nums1 []int, nums2 []int, k int) {
-	m, n := len(nums1), len(nums2)
-	ll, lr, rl, rr := 0, m, 0, n
-	for ll < lr && rl < rr {
-		mid := ll + (lr-ll)/2
-	}
-}
-
-func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
-
-}
