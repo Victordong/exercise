@@ -1012,3 +1012,76 @@ func numTrees(n int) int {
 	}
 	return g[n]
 }
+
+func lengthOfLongestSubstring(s string) int {
+	n := len(s)
+	wordMap := make(map[byte]int)
+	length := 0
+	maxLen := 0
+	begin := 0
+	for i := 0; i < n; i++ {
+		if _, ok := wordMap[s[i]]; ok {
+			if wordMap[s[i]] >= begin {
+				maxLen = max(maxLen, length)
+				length = i - wordMap[s[i]]
+				begin = wordMap[s[i]]
+			} else {
+				length += 1
+			}
+			wordMap[s[i]] = i
+		} else {
+			wordMap[s[i]] = i
+			length += 1
+		}
+	}
+	maxLen = max(maxLen, length)
+	return maxLen
+}
+
+func trap(height []int) int {
+	n := len(height)
+	leftHeight, rightHeight := 0, 0
+	i, j := 0, n-1
+	total := 0
+	for i < j {
+		if leftHeight <= rightHeight {
+			if height[i] <= leftHeight {
+				total += leftHeight - height[i]
+			} else {
+				leftHeight = height[i]
+			}
+			i += 1
+		} else {
+			if height[j] <= rightHeight {
+				total += rightHeight - height[j]
+			} else {
+				rightHeight = height[j]
+			}
+			j -= 1
+		}
+	}
+	return total
+}
+
+func maxSubArray(nums []int) int {
+	n := len(nums)
+	cur := 0
+	maxNumber := ^int(^uint(0) >> 1)
+	for i := 0; i < n; i++ {
+		cur = max(nums[i], nums[i]+cur)
+		maxNumber = max(maxNumber, cur)
+	}
+	return maxNumber
+}
+
+func partFindMedia(nums1 []int, nums2 []int, k int) {
+	m, n := len(nums1), len(nums2)
+	ll, lr, rl, rr := 0, m, 0, n
+	for ll < lr && rl < rr {
+		mid := ll + (lr-ll)/2
+	}
+}
+
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+
+}

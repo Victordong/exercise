@@ -13,3 +13,19 @@ func kthSmallest1(matrix [][]int, k int) int {
 	}
 	return matrix[i][j]
 }
+
+func twoSum(nums []int, target int) []int {
+	n := len(nums)
+	hashMap := make(map[int]int)
+	for i := 0; i < n; i++ {
+		hashMap[nums[i]] = i
+	}
+	for i := 0; i < n; i++ {
+		if _, ok := hashMap[target-nums[i]]; ok {
+			if i != hashMap[target-nums[i]] {
+				return []int{i, hashMap[target-nums[i]]}
+			}
+		}
+	}
+	return nil
+}
