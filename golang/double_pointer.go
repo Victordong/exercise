@@ -20,6 +20,31 @@ func maxArea(height []int) int {
 	return maxNum
 }
 
+func trap(height []int) int {
+	n := len(height)
+	leftHeight, rightHeight := 0, 0
+	i, j := 0, n-1
+	total := 0
+	for i < j {
+		if leftHeight <= rightHeight {
+			if height[i] <= leftHeight {
+				total += leftHeight - height[i]
+			} else {
+				leftHeight = height[i]
+			}
+			i += 1
+		} else {
+			if height[j] <= rightHeight {
+				total += rightHeight - height[j]
+			} else {
+				rightHeight = height[j]
+			}
+			j -= 1
+		}
+	}
+	return total
+}
+
 func threeSum(nums []int) [][]int {
 	n := len(nums)
 	if n < 3 {
@@ -49,6 +74,7 @@ func threeSum(nums []int) [][]int {
 					left += 1
 				}
 				right -= 1
+				left += 1
 			} else if sum < 0 {
 				left += 1
 			} else {
@@ -57,4 +83,28 @@ func threeSum(nums []int) [][]int {
 		}
 	}
 	return result
+}
+
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	cur1, cur2 := headA, headB
+	a, b := false, false
+	for {
+		if cur1 == nil && a {
+			break
+		} else if cur1 == nil && !a {
+			a = true
+			cur1 = headB
+		}
+		if cur2 == nil && b {
+			break
+		} else if cur2 == nil && !b {
+			b = true
+			cur2 = headA
+		}
+		if cur2 == cur1 {
+			return cur1
+		}
+		cur1, cur2 = cur1.Next, cur2.Next
+	}
+	return nil
 }

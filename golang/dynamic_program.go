@@ -1038,31 +1038,6 @@ func lengthOfLongestSubstring(s string) int {
 	return maxLen
 }
 
-func trap(height []int) int {
-	n := len(height)
-	leftHeight, rightHeight := 0, 0
-	i, j := 0, n-1
-	total := 0
-	for i < j {
-		if leftHeight <= rightHeight {
-			if height[i] <= leftHeight {
-				total += leftHeight - height[i]
-			} else {
-				leftHeight = height[i]
-			}
-			i += 1
-		} else {
-			if height[j] <= rightHeight {
-				total += rightHeight - height[j]
-			} else {
-				rightHeight = height[j]
-			}
-			j -= 1
-		}
-	}
-	return total
-}
-
 func maxSubArray(nums []int) int {
 	n := len(nums)
 	cur := 0
@@ -1070,6 +1045,58 @@ func maxSubArray(nums []int) int {
 	for i := 0; i < n; i++ {
 		cur = max(nums[i], nums[i]+cur)
 		maxNumber = max(maxNumber, cur)
+	}
+	return maxNumber
+}
+
+func maximalRectangle(matrix [][]byte) int {
+	n := len(matrix)
+	if n == 0 {
+		return 0
+	}
+	m := len(matrix[0])
+	if m == 0 {
+		return 0
+	}
+	maxNumber := 0
+	var dpX, dpY [1000][1000]int
+	if matrix[0][0] == '1' {
+		dpX[0][0], dpY[0][0] = 1, 1
+		maxNumber = max(maxNumber, dpX[0][0]*dpY[0][0])
+	} else {
+		dpX[0][0] = 0
+		dpY[0][0] = 0
+	}
+	for i := 1; i < n; i++ {
+		if matrix[i][0] == '1' {
+			dpY[i][0], dpX[i][0] = dpY[i-1][0]+1, 1
+			maxNumber = max(maxNumber, dpX[i][0]*dpY[i][0])
+		} else {
+			dpY[i][0], dpX[i][0] = 0, 0
+		}
+	}
+	for i := 1; i < m; i++ {
+		if matrix[0][i] == '1' {
+			dpX[0][i], dpY[0][i] = dpX[0][i-1]+1, 1
+			maxNumber = max(maxNumber, dpX[0][i]*dpY[0][i])
+		} else {
+			dpX[0][i], dpY[0][i] = 0, 0
+		}
+	}
+	for i := 1; i < n; i++ {
+		for j := 1; j < m; j++ {
+			if matrix[i][j] == '1' {
+				dpX[i][j] = max(dpX[i-1][j]+1, dpX[i][j-1])
+				dpY[i][j] = max(dpY[i][j-1]+1, dpY[i-1][j])
+				maxNumber = max(maxNumber, dpX[i][j]*dpY[i][j])
+			} else {
+				dpX[i][j], dpY[i][j] = 0, 0
+			}
+		}
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+		}
 	}
 	return maxNumber
 }
