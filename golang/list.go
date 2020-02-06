@@ -209,16 +209,31 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 }
 
-//func reorderList(head *ListNode)  {
-//	listStack := make([]*ListNode, 0)
-//	cur := head
-//	for cur!= nil {
-//		listStack = append(listStack, cur)
-//		cur = cur.Next
-//	}
-//	cur := head
-//	for {
-//		temp := cur.Next
-//
-//	}
-//}
+func reorderList(head *ListNode) {
+	listStack := make([]*ListNode, 0)
+	cur := head
+	for cur != nil {
+		listStack = append(listStack, cur)
+		cur = cur.Next
+	}
+	cur = head
+	var temp, first *ListNode
+	if len(listStack) > 2 {
+		for {
+			temp = cur.Next
+			first = listStack[len(listStack)-1]
+			listStack = listStack[:len(listStack)-1]
+			if cur.Next == first {
+				cur.Next = first
+				first.Next = nil
+				break
+			} else if cur == first {
+				cur.Next = nil
+				break
+			}
+			cur.Next = first
+			first.Next = temp
+			cur = temp
+		}
+	}
+}

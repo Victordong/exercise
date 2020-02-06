@@ -29,3 +29,22 @@ func twoSum(nums []int, target int) []int {
 	}
 	return nil
 }
+
+func isPalindrome(x int) bool {
+	if x < 0 {
+		return false
+	}
+	temp := x
+	total := 0
+	for {
+		total = 10*total + temp%10
+		temp = temp / 10
+		if temp == 0 {
+			break
+		}
+	}
+	if total == x {
+		return true
+	}
+	return false
+}
