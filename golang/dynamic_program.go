@@ -687,7 +687,7 @@ func countSquares(matrix [][]int) int {
 	return result
 }
 
-func minDistance(word1 string, word2 string) int {
+func minDistance1(word1 string, word2 string) int {
 	n := len(word1)
 	m := len(word2)
 	var dp [1000][1000]int
@@ -1099,4 +1099,48 @@ func maximalRectangle(matrix [][]byte) int {
 		}
 	}
 	return maxNumber
+}
+
+func minDistance(word1 string, word2 string) int {
+	var dp [501][501]int
+	m := len(word1)
+	n := len(word2)
+	if m == 0 {
+		return n
+	}
+	if n == 0 {
+		return m
+	}
+	equal := false
+	for i := 0; i < m; i++ {
+		if word1[i] == word2[0] {
+			equal = true
+		}
+		if equal {
+			dp[i][0] = 1
+		} else {
+			dp[i][0] = 0
+		}
+	}
+	equal = false
+	for i := 0; i < n; i++ {
+		if word2[i] == word1[0] {
+			equal = true
+		}
+		if equal {
+			dp[0][i] = 1
+		} else {
+			dp[0][i] = 0
+		}
+	}
+	for i := 1; i < m; i++ {
+		for j := 1; j < n; j++ {
+			if word1[i] != word2[j] {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			} else {
+				dp[i][j] = dp[i-1][j-1] + 1
+			}
+		}
+	}
+	return m + n - 2*dp[m-1][n-1]
 }

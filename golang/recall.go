@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 func permute(nums []int) [][]int {
 	result := make([][]int, 0)
 	partPermute(nums, []int{}, &result)
@@ -102,4 +104,82 @@ func numIslands(grid [][]byte) int {
 		}
 	}
 	return total
+}
+
+func partGenerateParenthesis(left int, right int, number int, cur string, result *[]string) {
+	if left == 0 {
+		for i := 0; i < right; i++ {
+			cur = cur + ")"
+		}
+		*result = append(*result, cur)
+		return
+	}
+	if number > 0 {
+		partGenerateParenthesis(left, right-1, number-1, cur+")", result)
+	}
+	partGenerateParenthesis(left-1, right, number+1, cur+"(", result)
+}
+
+func generateParenthesis(n int) []string {
+	result := make([]string, 0)
+	partGenerateParenthesis(n-1, n, 1, "(", &result)
+	return result
+}
+
+func partSub(nums []int, begin int, now []int, result *[][]int) {
+	*result = append(*result, now)
+	for i := begin; i < len(nums); i++ {
+		curNow := make([]int, len(now))
+		copy(curNow, now)
+		curNow = append(curNow, nums[i])
+		partSub(nums, i+1, curNow, result)
+	}
+}
+
+func subsets(nums []int) [][]int {
+	result := make([][]int, 0)
+	partSub(nums, 0, []int{}, &result)
+	return result
+}
+
+func partSubDup(nums []int, begin int, now []int, result *[][]int) {
+	*result = append(*result, now)
+	for i := begin; i < len(nums); i++ {
+		if i == begin || (i > begin && nums[i] != nums[i-1]) {
+			curNow := make([]int, len(now))
+			copy(curNow, now)
+			curNow = append(curNow, nums[i])
+			partSub(nums, i+1, curNow, result)
+		}
+	}
+}
+
+func subsetsWithDup(nums []int) [][]int {
+	sort.Ints(nums)
+	result := make([][]int, 0)
+	partSub(nums, 0, []int{}, &result)
+	return result
+}
+
+func partPermuteUnique(nums []int, now []int, result *[][]int) {
+	if len(nums) == 0 {
+		*result = append(*result, now)
+	}
+	for i, value := range nums {
+		if i == 0 || (i > 0 && nums[i-1] != nums[i]) {
+			newNums := make([]int, len(nums))
+			copy(newNums, nums)
+			newNow := make([]int, len(now))
+			copy(newNow, now)
+			newNow = append(newNow, value)
+			partPermuteUnique(append(newNums[:i], newNums[i+1:]...), newNow, result)
+		}
+	}
+}
+
+func permuteUnique(nums []int) [][]int {
+	sort.Ints(nums)
+	result := make([][]int, 0)
+	partPermuteUnique(nums, []int{}, &result)
+	return result
 }

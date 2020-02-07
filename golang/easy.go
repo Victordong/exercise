@@ -48,3 +48,23 @@ func isPalindrome(x int) bool {
 	}
 	return false
 }
+
+func reverse1(x int) int {
+	total := 0
+	re := false
+	if x < 0 {
+		re = true
+		x = x * -1
+	}
+	for {
+		total = total*10 + x%10
+		x = x / 10
+		if x == 0 {
+			break
+		}
+	}
+	if re {
+		total = total * -1
+	}
+	return total
+}
