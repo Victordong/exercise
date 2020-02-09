@@ -355,35 +355,35 @@ func kthSmallest(matrix [][]int, k int) int {
 	return min
 }
 
-//func partFindMedia(nums1 []int, nums2 []int, k int) int {
-//	m, n := len(nums1), len(nums2)
-//	i, j := 0, 0
-//	mid := k / 2
-//	for mid > 0 {
-//		if mid+i >= m {
-//			if nums1[m-1] < nums2[mid+j] {
-//				return nums2[k-m-1]
-//			} else {
-//				j = mid + j + 1
-//			}
-//		} else if mid+j >= n {
-//			if nums2[n-1] < nums1[mid+i] {
-//				return nums1[k-n-1]
-//			} else {
-//				i = mid + i + 1
-//			}
-//		} else {
-//			if nums1[mid+i] < nums2[mid+j] {
-//				i = mid + i + 1
-//			} else {
-//				j = mid + j + 1
-//			}
-//		}
-//		mid = (k - k/2) / 2
-//	}
-//	return
-//}
-//
-//func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
-//
-//}
+func partFindMedia(nums1 []int, nums2 []int, k int) int {
+	m, n := len(nums1), len(nums2)
+	i, j := 0, 0
+	mid := k / 2
+	for mid > 0 {
+		if mid+i >= m {
+			if nums1[m-1] < nums2[mid+j] {
+				return nums2[k-m-1]
+			} else {
+				j = mid + j + 1
+			}
+		} else if mid+j >= n {
+			if nums2[n-1] < nums1[mid+i] {
+				return nums1[k-n-1]
+			} else {
+				i = mid + i + 1
+			}
+		} else {
+			if nums1[mid+i] < nums2[mid+j] {
+				i = mid + i + 1
+			} else {
+				j = mid + j + 1
+			}
+		}
+		mid = (k - k/2) / 2
+	}
+	return
+}
+
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+
+}
