@@ -1048,3 +1048,20 @@ func maxSubArray(nums []int) int {
 	}
 	return maxNumber
 }
+
+func numSquares(n int) int {
+	dp := make([]int, n+1)
+	var cur int
+	var minNum int
+	dp[0] = 0
+	for i := 1; i <= n; i++ {
+		cur = 1
+		minNum = i + 1
+		for cur*cur <= i {
+			minNum = min(minNum, dp[i-cur*cur]+1)
+			cur = cur + 1
+		}
+		dp[i] = minNum
+	}
+	return dp[n]
+}

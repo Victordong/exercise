@@ -141,3 +141,20 @@ func maximalRectangle(matrix [][]byte) int {
 	}
 	return maxNumber
 }
+
+func scoreOfParentheses(S string) int {
+	scoreStack := make([]int, 0)
+	scoreStack = append(scoreStack, 0)
+	for i := 0; i < len(S); i++ {
+		if S[i] == '(' {
+			scoreStack = append(scoreStack, 0)
+		} else {
+			currentScore := scoreStack[len(scoreStack)-1]
+			lastScore := scoreStack[len(scoreStack)-2]
+			lastScore += max(currentScore*2, currentScore+1)
+			scoreStack[len(scoreStack)-2] = lastScore
+			scoreStack = scoreStack[:len(scoreStack)-1]
+		}
+	}
+	return scoreStack[len(scoreStack)-1]
+}

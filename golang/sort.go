@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func position(nums []int, left int, right int) int {
 	temp := nums[left]
@@ -44,4 +47,70 @@ func findKthLargest(nums []int, k int) int {
 		}
 	}
 	return nums[k-1]
+}
+
+type meeting struct {
+	begin int
+	end   int
+}
+
+type meetingArr []meeting
+
+func (m meetingArr) Len() int {
+	return len(m)
+}
+
+func (m meetingArr) Less(i, j int) bool {
+	return m[i].begin <= m[j].begin
+}
+
+func (m meetingArr) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
+}
+
+func canAttendMeetings(intervals [][]int) bool {
+	m := len(intervals)
+	result := make(meetingArr, 0)
+	for i := 0; i < m; i++ {
+		result = append(result, meeting{begin: intervals[i][0], end: intervals[i][1]})
+	}
+	sort.Sort(result)
+	for i := 1; i < m; i++ {
+		if result[i].begin < result[i-1].begin {
+			return false
+		}
+	}
+	return true
+}
+
+func minMeetingRooms(intervals [][]int) int {
+	m := len(intervals)
+	if m == 0 {
+		return 0
+	}
+	result := make(meetingArr, 0)
+	for i := 0; i < m; i++ {
+		result = append(result, meeting{begin: intervals[i][0], end: intervals[i][1]})
+	}
+	sort.Sort(result)
+	minRooms := 0
+	endStack := make([]int, 0)
+	helpStack := make([]int, 0)
+	endStack = append(endStack, result[0].end)
+	for i := 1; i < m; i++ {
+		for len(endStack) != 0 && result[i].begin >= endStack[len(endStack)-1] {
+			endStack = endStack[:len(endStack)-1]
+		}
+		for len(endStack) != 0 && result[i].end > endStack[len(endStack)-1] {
+			helpStack = append(helpStack, endStack[len(endStack)-1])
+			endStack = endStack[:len(endStack)-1]
+		}
+		endStack = append(endStack, result[i].end)
+		for len(helpStack) != 0 {
+			endStack = append(endStack, helpStack[len(helpStack)-1])
+			helpStack = helpStack[:len(helpStack)-1]
+		}
+	}
+	minRooms = max(minRooms, len(endStack))
+	return minRooms
 }
