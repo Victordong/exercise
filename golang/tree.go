@@ -396,3 +396,26 @@ func rob(root *TreeNode) int {
 	robMap := make(map[*TreeNode]int)
 	return partRob(root, robMap)
 }
+
+func partGenerateTrees(begin int, end int) []*TreeNode {
+	if begin > end {
+		return []*TreeNode{nil}
+	}
+
+	result := make([]*TreeNode, 0)
+	for i := begin; i <= end; i++ {
+		leftNodes := partGenerateTrees(begin, i-1)
+		rightNodes := partGenerateTrees(i+1, end)
+		for _, leftNode := range leftNodes {
+			for _, rightNode := range rightNodes {
+				newNode := new(TreeNode)
+				newNode.Left, newNode.Right, newNode.Val = leftNode, rightNode, i
+				result = append(result, newNode)
+			}
+		}
+	}
+	return result
+}
+func generateTrees(n int) []*TreeNode {
+	return partGenerateTrees(1, n)
+}
