@@ -1065,3 +1065,8 @@ func numSquares(n int) int {
 	}
 	return dp[n]
 }
+
+func integerBreak(n int) int {
+	var result int
+	return result
+}
