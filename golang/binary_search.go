@@ -222,7 +222,7 @@ func searchRange(nums []int, target int) []int {
 	return []int{valueLeft, valueRight}
 }
 
-func searchMatrix(matrix [][]int, target int) bool {
+func searchMatrix1(matrix [][]int, target int) bool {
 	n := len(matrix)
 	if n == 0 {
 		return false

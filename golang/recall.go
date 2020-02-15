@@ -1,6 +1,8 @@
 package main
 
-import "sort"
+import (
+	"sort"
+)
 
 func permute(nums []int) [][]int {
 	result := make([][]int, 0)
@@ -181,5 +183,65 @@ func permuteUnique(nums []int) [][]int {
 	sort.Ints(nums)
 	result := make([][]int, 0)
 	partPermuteUnique(nums, []int{}, &result)
+	return result
+}
+
+func setDp(dp [100][100]bool, x int, y int, value bool, length int) [100][100]bool {
+	for i := 0; i < length; i++ {
+		dp[x][i] = value
+	}
+	for j := 0; j < length; j++ {
+		dp[j][y] = value
+	}
+	i, j := x, y
+	for i >= 0 && j >= 0 {
+		dp[i][j] = value
+		i, j = i-1, j-1
+	}
+	i, j = x, y
+	for i >= 0 && j < length {
+		dp[i][j] = value
+		i, j = i-1, j+1
+
+	}
+	i, j = x, y
+	for i < length && j < length {
+		dp[i][j] = value
+		i, j = i+1, j+1
+	}
+	i, j = x, y
+	for i < length && j >= 0 {
+		dp[i][j] = value
+		i, j = i+1, j-1
+	}
+	return dp
+}
+
+func partSolveQueens(dp [100][100]bool, floor int, n int, result *int) {
+	if floor == n {
+		*result = *result + 1
+		return
+	}
+	for i := 0; i < n; i++ {
+		if !dp[floor][i] {
+			partDp := setDp(dp, floor, i, true, n)
+			//fmt.Println(floor, i)
+			//for i:=0;i<n;i++ {
+			//	for j :=0;j<n;j++ {
+			//		fmt.Print(dp[i][j], " ")
+			//	}
+			//	fmt.Println()
+			//}
+			partSolveQueens(partDp, floor+1, n, result)
+		}
+	}
+
+}
+
+func totalNQueens(n int) int {
+	var result int = 0
+	var dp [100][100]bool
+	partSolveQueens(dp, 0, n, &result)
+	//fmt.Println(result)
 	return result
 }

@@ -1,5 +1,10 @@
 package main
 
+import (
+	"sort"
+	"strconv"
+)
+
 func kthSmallest1(matrix [][]int, k int) int {
 	n := len(matrix)
 	var i int
@@ -30,7 +35,7 @@ func twoSum(nums []int, target int) []int {
 	return nil
 }
 
-func isPalindrome(x int) bool {
+func isPalindrome1(x int) bool {
 	if x < 0 {
 		return false
 	}
@@ -67,4 +72,59 @@ func reverse1(x int) int {
 		total = total * -1
 	}
 	return total
+}
+
+func searchMatrix(matrix [][]int, target int) bool {
+	m := len(matrix)
+	if m == 0 {
+		return false
+	}
+	n := len(matrix[0])
+	if n == 0 {
+		return false
+	}
+	i := 0
+	j := n - 1
+	for i < m && j >= 0 {
+		if matrix[i][j] == target {
+			return true
+		}
+		if matrix[i][j] < target {
+			i += 1
+		}
+		if matrix[i][j] > target {
+			j -= 1
+		}
+	}
+	return false
+}
+
+type largestNumberList []int
+
+func (l largestNumberList) Len() int {
+	return len(l)
+}
+
+func (l largestNumberList) Swap(i, j int) {
+	l[i], l[j] = l[j], l[i]
+}
+
+func (l largestNumberList) Less(i, j int) bool {
+	return strconv.Itoa(l[i])+strconv.Itoa(l[j]) > strconv.Itoa(l[j])+strconv.Itoa(l[i])
+}
+
+func largestNumber(nums []int) string {
+	l := make(largestNumberList, len(nums))
+	copy(l, nums)
+	sort.Sort(l)
+	result := ""
+	for _, value := range l {
+		result += strconv.Itoa(value)
+	}
+	part, err := strconv.Atoi(result)
+	if err != nil {
+		return result
+	} else {
+		return strconv.Itoa(part)
+	}
 }

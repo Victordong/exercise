@@ -85,7 +85,7 @@ func threeSum(nums []int) [][]int {
 	return result
 }
 
-func getIntersectionNode(headA, headB *ListNode) *ListNode {
+func getIntersectionNode1(headA, headB *ListNode) *ListNode {
 	cur1, cur2 := headA, headB
 	a, b := false, false
 	for {

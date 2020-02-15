@@ -1070,3 +1070,7 @@ func integerBreak(n int) int {
 	var result int
 	return result
 }
+
+func longestSubstring(s string, k int) int {
+
+}

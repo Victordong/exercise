@@ -237,3 +237,79 @@ func reorderList(head *ListNode) {
 		}
 	}
 }
+
+func hasCycle(head *ListNode) bool {
+	curFast, curSlow := head, head
+	for curFast != nil {
+		curSlow = curSlow.Next
+		if curFast.Next != nil {
+			curFast = curFast.Next.Next
+		} else {
+			curFast = curFast.Next
+		}
+		if curFast == curSlow {
+			break
+		}
+	}
+	if curFast == nil {
+		return false
+	}
+	return true
+}
+
+func detectCycle(head *ListNode) *ListNode {
+	curFast, curSlow := head, head
+	for curFast != nil {
+		curSlow = curSlow.Next
+		if curFast.Next != nil {
+			curFast = curFast.Next.Next
+		} else {
+			curFast = curFast.Next
+		}
+		if curFast == curSlow {
+			break
+		}
+	}
+	if curFast == nil {
+		return nil
+	}
+	curFast = head
+	for curFast != curSlow {
+		curFast = curFast.Next
+		curSlow = curSlow.Next
+	}
+	return curFast
+}
+
+func isPalindrome(head *ListNode) bool {
+	if head == nil {
+		return true
+	}
+	stack := make([]int, 0)
+	cur := head
+	for cur != nil {
+		stack = append(stack, cur.Val)
+		cur = cur.Next
+	}
+	cur = head
+	for cur != nil {
+		if stack[len(stack)-1] != cur.Val {
+			return false
+		}
+		stack = stack[:len(stack)-1]
+		cur = cur.Next
+	}
+	return true
+}
+
+func deleteNode(node *ListNode) {
+	cur := node
+	pre := node.Next
+	for pre.Next != nil {
+		cur.Val = pre.Val
+		cur = cur.Next
+		pre = pre.Next
+	}
+	cur.Val = pre.Val
+	cur.Next = nil
+}
