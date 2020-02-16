@@ -142,7 +142,7 @@ func search1(nums []int, target int) int {
 	return -1
 }
 
-func findPeakElement(nums []int) int {
+func findPeakElement1(nums []int) int {
 	n := len(nums)
 	if n == 0 || n == 1 {
 		return n - 1
@@ -388,3 +388,30 @@ func kthSmallest(matrix [][]int, k int) int {
 //func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 //
 //}
+
+func findPeakElement(nums []int) int {
+	n := len(nums)
+	if n == 0 || n == 1 {
+		return n - 1
+	}
+	left, right := 0, n-1
+	if nums[left] > nums[left+1] {
+		return left
+	}
+	if nums[right] > nums[right-1] {
+		return right
+	}
+	var mid int = (left + right) / 2
+	for left < mid && mid <= n-2 && mid >= 1 {
+		if nums[mid] > nums[mid+1] && nums[mid] > nums[mid-1] {
+			return mid
+		}
+		if nums[mid] < nums[mid+1] {
+			left = mid
+		} else if nums[mid] < nums[mid-1] {
+			right = mid
+		}
+		mid = (left + right) / 2
+	}
+	return mid
+}

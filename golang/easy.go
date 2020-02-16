@@ -154,3 +154,49 @@ func majorityElement(nums []int) int {
 	sort.Ints(nums)
 	return nums[len(nums)/2]
 }
+
+func rotate(nums []int, k int) {
+	n := len(nums)
+	total := 0
+	var temp, cur int
+	for start := 0; total < n; start++ {
+		cur, temp = start, nums[start]
+		for {
+			nTemp := nums[(cur+k)%n]
+			nums[(cur+k)%n] = temp
+			temp = nTemp
+			cur = (cur + k) % n
+			total = total + 1
+			if cur == start {
+				break
+			}
+		}
+	}
+}
+func containsDuplicate(nums []int) bool {
+	sort.Ints(nums)
+	for i := 1; i < len(nums); i++ {
+		if nums[i] == nums[i-1] {
+			return true
+		}
+	}
+	return false
+}
+
+func containsNearbyDuplicate(nums []int, k int) bool {
+	hashMap := make(map[int][]int)
+	for index, num := range nums {
+		if value, ok := hashMap[num]; ok {
+			for i := len(value) - 1; i >= 0; i-- {
+				if (index - value[i]) <= k {
+					return true
+				} else {
+					hashMap[num] = append(hashMap[num], index)
+				}
+			}
+		} else {
+			hashMap[num] = []int{index}
+		}
+	}
+	return false
+}

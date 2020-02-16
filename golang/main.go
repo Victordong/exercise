@@ -1,5 +1,17 @@
 package main
 
+import "fmt"
+
 func main() {
-	merge([]int{0}, 0, []int{1}, 1)
+	dp := []int{1, 2, 3}
+	left, right := 0, len(dp)
+	for left < right {
+		mid := left + (right-left)/2
+		if dp[mid] < 3 {
+			left = mid + 1
+		} else {
+			right = mid
+		}
+	}
+	fmt.Println(left)
 }

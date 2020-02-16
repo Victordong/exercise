@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 func longestPalindrome(s string) string {
 	var a [1001][1001]int
 	n := len(s)
@@ -115,10 +117,10 @@ func max(first int, second int) int {
 	}
 }
 
-func maxProduct(nums []int) int {
+func maxProduct1(nums []int) int {
 	var imax = 1
 	var imin = 1
-	var maxNum = 0
+	var maxNum = ^(int(^uint(0) >> 1))
 	for i := 0; i < len(nums); i++ {
 		if nums[i] < 0 {
 			temp := imax
@@ -532,7 +534,7 @@ func mincostTickets(days []int, costs []int) int {
 	return dp[n]
 }
 
-func lengthOfLIS(nums []int) int {
+func lengthOfLIS2(nums []int) int {
 	n := len(nums)
 	if n == 0 {
 		return 0
@@ -1049,7 +1051,7 @@ func maxSubArray(nums []int) int {
 	return maxNumber
 }
 
-func numSquares(n int) int {
+func numSquares1(n int) int {
 	dp := make([]int, n+1)
 	var cur int
 	var minNum int
@@ -1074,3 +1076,70 @@ func integerBreak(n int) int {
 //func longestSubstring(s string, k int) int {
 //
 //}
+
+func maxProduct(nums []int) int {
+	maxNum, minNum, result := 1, 1, math.MinInt64
+	for _, num := range nums {
+		if num < 0 {
+			maxNum, minNum = minNum, maxNum
+		}
+		maxNum, minNum = max(maxNum, maxNum*num), min(minNum, minNum*num)
+		result = max(maxNum, result)
+	}
+	return result
+}
+
+func lengthOfLIS(nums []int) int {
+	n := len(nums)
+	if n == 0 {
+		return 0
+	}
+	dp := make([]int, 0)
+	dp = append(dp, nums[0])
+	for i := 1; i < n; i++ {
+		left, right := 0, len(dp)
+		for left < right {
+			mid := left + (right-left)/2
+			if dp[mid] < nums[i] {
+				left = mid + 1
+			} else {
+				right = mid
+			}
+		}
+		if left == len(dp) {
+			dp = append(dp, nums[i])
+		} else {
+			dp[left] = nums[i]
+		}
+	}
+	return len(dp)
+}
+
+func partMaxPathSum(root *TreeNode, hashMap map[*TreeNode]int) int {
+	if root == nil {
+		return 0
+	}
+	if value, ok := hashMap[root]; ok {
+		return value
+	}
+	cur := max(partMaxPathSum(root.Left, hashMap), partMaxPathSum(root.Right, hashMap)) + root.Val
+	hashMap[root] = cur
+	return cur
+}
+
+func maxPathSum(root *TreeNode) int {
+	hashMap := make(map[*TreeNode]int)
+	return partMaxPathSum(root, hashMap)
+}
+
+func numSquares(n int) int {
+	dp := make([]int, n+1)
+	dp[0] = 0
+	for i := 1; i <= n; i++ {
+		dp[i] = i
+		for j := 1; j*j <= i; j++ {
+			dp[i] = min(dp[i], dp[i-j*j]+1)
+		}
+	}
+	return dp[n]
+}

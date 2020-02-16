@@ -314,6 +314,25 @@ func deleteNode(node *ListNode) {
 	cur.Next = nil
 }
 
-//func oddEvenList(head *ListNode) *ListNode {
-//
-//}
+func oddEvenList(head *ListNode) *ListNode {
+	first, second := new(ListNode), new(ListNode)
+	cur1, cur2 := first, second
+	cur := head
+	odd := true
+	for cur != nil {
+		temp := cur.Next
+		if odd {
+			cur1.Next = cur
+			cur1 = cur
+			cur1.Next = nil
+		} else {
+			cur2.Next = cur
+			cur2 = cur
+			cur2.Next = nil
+		}
+		odd = !odd
+		cur = temp
+	}
+	cur1.Next = second.Next
+	return first.Next
+}
