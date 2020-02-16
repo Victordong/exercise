@@ -1,5 +1,5 @@
 package main
 
 func main() {
-	solveNQueens(4)
+	merge([]int{0}, 0, []int{1}, 1)
 }

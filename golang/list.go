@@ -313,3 +313,7 @@ func deleteNode(node *ListNode) {
 	cur.Val = pre.Val
 	cur.Next = nil
 }
+
+//func oddEvenList(head *ListNode) *ListNode {
+//
+//}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 )
@@ -127,4 +128,29 @@ func largestNumber(nums []int) string {
 	} else {
 		return strconv.Itoa(part)
 	}
+}
+
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	i, j, cur := m-1, n-1, m+n-1
+	for i >= 0 && j >= 0 {
+		if nums1[i] >= nums2[i] {
+			nums1[cur] = nums1[i]
+			i -= 1
+		} else {
+			nums1[cur] = nums2[j]
+			j -= 1
+		}
+		cur -= 1
+	}
+	if j > 0 {
+		for i := 0; i <= j; i++ {
+			nums1[i] = nums2[i]
+		}
+	}
+	fmt.Println(nums1)
+}
+
+func majorityElement(nums []int) int {
+	sort.Ints(nums)
+	return nums[len(nums)/2]
 }
