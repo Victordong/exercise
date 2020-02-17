@@ -1143,3 +1143,7 @@ func numSquares(n int) int {
 	}
 	return dp[n]
 }
+
+//func longestSubstring(s string, k int) int {
+//
+//}
