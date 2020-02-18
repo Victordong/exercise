@@ -1,4 +1,4 @@
-package main
+package golang
 
 import (
 	"fmt"
@@ -130,7 +130,7 @@ func largestNumber(nums []int) string {
 	}
 }
 
-func merge(nums1 []int, m int, nums2 []int, n int) {
+func merge1(nums1 []int, m int, nums2 []int, n int) {
 	i, j, cur := m-1, n-1, m+n-1
 	for i >= 0 && j >= 0 {
 		if nums1[i] >= nums2[i] {

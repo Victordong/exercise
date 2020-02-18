@@ -1,4 +1,4 @@
-package main
+package golang
 
 type ListNode struct {
 	Val  int

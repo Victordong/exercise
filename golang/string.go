@@ -1,4 +1,4 @@
-package main
+package golang
 
 func isPalindrome2(s string) bool {
 	i := 0

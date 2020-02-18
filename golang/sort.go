@@ -1,4 +1,4 @@
-package main
+package golang
 
 import (
 	"fmt"
@@ -113,4 +113,46 @@ func minMeetingRooms(intervals [][]int) int {
 	}
 	minRooms = max(minRooms, len(endStack))
 	return minRooms
+}
+
+type mergeInterval struct {
+	begin int
+	end   int
+}
+
+type mergeIntervalList []mergeInterval
+
+func (m mergeIntervalList) Len() int {
+	return len(m)
+}
+
+func (m mergeIntervalList) Less(i, j int) bool {
+	return m[i].begin <= m[j].begin
+}
+
+func (m mergeIntervalList) Swap(i, j int) {
+	m[i], m[j] = m[j], m[i]
+}
+
+func merge(intervals [][]int) [][]int {
+	n := len(intervals)
+	if n == 0 {
+		return nil
+	}
+	list := make(mergeIntervalList, 0)
+	for i := 0; i < n; i++ {
+		list = append(list, mergeInterval{begin: intervals[i][0], end: intervals[i][1]})
+	}
+	sort.Sort(list)
+	result := make([][]int, 0)
+	for i := 1; i < n; i++ {
+		if list[i].begin <= list[i-1].end {
+			list[i].begin = list[i-1].begin
+			list[i].end = max(list[i-1].end, list[i].end)
+		} else {
+			result = append(result, []int{list[i-1].begin, list[i-1].end})
+		}
+	}
+	result = append(result, []int{list[len(list)-1].begin, list[len(list)-1].end})
+	return result
 }
