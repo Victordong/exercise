@@ -445,3 +445,80 @@ type Trie struct {
 //func (this *Trie) StartsWith(prefix string) bool {
 //
 //}
+func rightSideView(root *TreeNode) []int {
+	var last, nextLast, cur *TreeNode = root, nil, nil
+	queue := make([]*TreeNode, 0)
+	queue = append(queue, last)
+	result := make([]int, 0)
+	for len(queue) != 0 {
+		cur = queue[0]
+		queue = queue[1:]
+		if cur.Left != nil {
+			nextLast = cur.Left
+			queue = append(queue, nextLast)
+		}
+		if cur.Right != nil {
+			nextLast = cur.Right
+			queue = append(queue, nextLast)
+		}
+		if cur == last {
+			last = nextLast
+			result = append(result, cur.Val)
+		}
+	}
+	return result
+}
+
+func pathTo(root, p, q *TreeNode, parents **TreeNode) bool {
+	if root == nil {
+		return false
+	}
+	successL := pathTo(root.Left, p, q, parents)
+	successR := pathTo(root.Right, p, q, parents)
+	var part int = 0
+	if successL {
+		part += 1
+	}
+	if successR {
+		part += 1
+	}
+	if root == q || root == p {
+		part += 1
+	}
+	if part >= 2 {
+		*parents = root
+	}
+	return part > 0
+}
+
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	var result *TreeNode = nil
+	pathTo(root, p, q, &result)
+	return result
+}
+
+
+func partInvertTree(root *TreeNode) {
+
+}
+
+func invertTree(root *TreeNode) *TreeNode {
+	if root == nil {
+		return root
+	}
+	trees := make([]*TreeNode, 0)
+	trees = append(trees, root)
+	var cur *TreeNode
+	for len(trees)!=0 {
+		cur = trees[0]
+		trees = trees[1:]
+		cur.Left, cur.Right = cur.Right, cur.Left
+		if cur.Left!= nil {
+			trees = append(trees, cur.Left)
+		}
+		if cur.Right!= nil {
+			trees = append(trees, cur.Right)
+		}
+	}
+	return root
+}

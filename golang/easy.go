@@ -200,3 +200,44 @@ func containsNearbyDuplicate(nums []int, k int) bool {
 	}
 	return false
 }
+
+func spiralOrder(matrix [][]int) []int {
+	m := len(matrix)
+	if m == 0 {
+		return nil
+	}
+	n := len(matrix[0])
+	now := 0
+	i, j := 0, 0
+	result := make([]int, 0)
+	for {
+		if m-now*2 <= 1 || n-now*2 <= 1 {
+			break
+		}
+		for ; j < n-1-now; j++ {
+			result = append(result, matrix[i][j])
+		}
+		for ; i < m-1-now; i++ {
+			result = append(result, matrix[i][j])
+		}
+		for ; j > now; j-- {
+			result = append(result, matrix[i][j])
+		}
+		for ; i > now; i-- {
+			result = append(result, matrix[i][j])
+		}
+		now += 1
+		i, j = i+1, j+1
+	}
+	fmt.Println(n-now)
+	if m-now*2 == 1 {
+		for ;j<n-now;j++ {
+			result = append(result, matrix[i][j])
+		}
+	} else if n-now*2==1 {
+		for ;i<n-now;i++ {
+			result = append(result, matrix[i][j])
+		}
+	}
+	return result
+}
