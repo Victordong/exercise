@@ -234,6 +234,8 @@ func partSolveQueens(dp [100][100]bool, floor int, n int, result *int) {
 			//}
 			partSolveQueens(partDp, floor+1, n, result)
 		}
+
+
 	}
 
 }
