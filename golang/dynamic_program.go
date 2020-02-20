@@ -1147,3 +1147,20 @@ func numSquares(n int) int {
 //func longestSubstring(s string, k int) int {
 //
 //}
+
+func canJump(nums []int) bool {
+	n := len(nums)
+	if n <= 1 {
+		return true
+	}
+	maxCan := 0
+	for i := 0; i < n; i++ {
+		if maxCan == i && nums[i] == 0 {
+			return false
+		}
+		if maxCan < nums[i]+i {
+			maxCan = nums[i] + i
+		}
+	}
+	return true
+}

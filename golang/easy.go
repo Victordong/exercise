@@ -229,15 +229,53 @@ func spiralOrder(matrix [][]int) []int {
 		now += 1
 		i, j = i+1, j+1
 	}
-	fmt.Println(n-now)
+	fmt.Println(n - now)
 	if m-now*2 == 1 {
-		for ;j<n-now;j++ {
+		for ; j < n-now; j++ {
 			result = append(result, matrix[i][j])
 		}
-	} else if n-now*2==1 {
-		for ;i<n-now;i++ {
+	} else if n-now*2 == 1 {
+		for ; i < n-now; i++ {
 			result = append(result, matrix[i][j])
 		}
 	}
 	return result
+}
+
+type MinStack struct {
+	main []int
+	help []int
+}
+
+/** initialize your data structure here. */
+func Constructor() MinStack {
+	return MinStack{main: make([]int, 0), help: make([]int, 0)}
+}
+
+func (this *MinStack) Push(x int) {
+	if len(this.main) == 0 {
+		this.help = append(this.help, x)
+	} else {
+		var top = this.main[len(this.main)-1]
+		if x >= top {
+			this.help = append(this.help, x)
+		}
+	}
+	this.main = append(this.main, x)
+}
+
+func (this *MinStack) Pop() {
+	var top = this.main[len(this.main)-1]
+	if top == this.help[len(this.main)-1] {
+		this.help = this.help[:len(this.help)-1]
+	}
+	this.main = this.main[:len(this.main)-1]
+}
+
+func (this *MinStack) Top() int {
+	return this.main[len(this.main)-1]
+}
+
+func (this *MinStack) GetMin() int {
+	return this.help[len(this.help)-1]
 }
