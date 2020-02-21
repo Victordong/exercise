@@ -1164,3 +1164,25 @@ func canJump(nums []int) bool {
 	}
 	return true
 }
+
+func longestConsecutive(nums []int) int {
+	numberMap := make(map[int]int)
+	var part1, part2, partResult int
+	var ok bool
+	result := 0
+	for _, num := range nums {
+		if partResult, ok = numberMap[num]; !ok || partResult == 0 {
+			if part1, ok = numberMap[num-1]; !ok {
+				part1 = 0
+			}
+			if part2, ok = numberMap[num+1]; !ok {
+				part2 = 0
+			}
+			numberMap[num] = part1 + part2 + 1
+			numberMap[num-1] = numberMap[num]
+			numberMap[num+1] = numberMap[num]
+			result = max(numberMap[num], result)
+		}
+	}
+	return result
+}
