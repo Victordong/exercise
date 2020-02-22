@@ -248,7 +248,7 @@ type MinStack struct {
 }
 
 /** initialize your data structure here. */
-func Constructor() MinStack {
+func Constructor1() MinStack {
 	return MinStack{main: make([]int, 0), help: make([]int, 0)}
 }
 
@@ -278,4 +278,59 @@ func (this *MinStack) Top() int {
 
 func (this *MinStack) GetMin() int {
 	return this.help[len(this.help)-1]
+}
+
+func checkValidString(s string) bool {
+	mainStack := make([]int, 0)
+	starStack := make([]int, 0)
+	for i := 0; i < len(s); i++ {
+		if s[i] == '(' {
+			mainStack = append(mainStack, i)
+		} else if s[i] == ')' {
+			if len(mainStack) > 0 {
+				mainStack = mainStack[:len(mainStack)-1]
+			} else {
+				if len(starStack) > 0 {
+					starStack = starStack[:len(starStack)-1]
+				} else {
+					return false
+				}
+			}
+		} else {
+			starStack = append(starStack, i)
+		}
+	}
+	for len(mainStack) != 0 {
+		if len(starStack) == 0 {
+			return false
+		}
+		if starStack[len(starStack)-1] < mainStack[len(starStack)-1] {
+			starStack = starStack[:len(starStack)-1]
+			mainStack = mainStack[:len(mainStack)-1]
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func checkValidString1(s string) bool {
+	minV, maxV := 0, 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == '(' {
+			minV, maxV = minV+1, maxV+1
+		} else if s[i] == ')' {
+			if maxV <= 0 {
+				return false
+			}
+			minV, maxV = minV-1, maxV-1
+		} else {
+			minV = minV - 1
+			maxV = maxV + 1
+		}
+	}
+	if minV <= 0 && maxV >= 0 {
+		return true
+	}
+	return false
 }

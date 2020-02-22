@@ -156,3 +156,35 @@ func merge(intervals [][]int) [][]int {
 	result = append(result, []int{list[len(list)-1].begin, list[len(list)-1].end})
 	return result
 }
+
+func partHeapSort(arr []int, begin int, end int) {
+	father, son := begin, begin*2+1
+	for son <= end {
+		if son+1 <= end && arr[son] > arr[son+1] {
+			son = son + 1
+		}
+		if arr[father] < arr[son] {
+			return
+		} else {
+			arr[father], arr[son] = arr[son], arr[father]
+			father = son
+			son = father*2 + 1
+		}
+	}
+}
+
+func heapSort(arr []int) {
+	n := len(arr)
+	for i := n/2 - 1; i >= 0; i-- {
+		partHeapSort(arr, i, n-1)
+	}
+	for i := n - 1; i >= 0; i-- {
+		arr[i], arr[0] = arr[0], arr[i]
+		partHeapSort(arr, 0, i-1)
+	}
+}
+
+//func countingSort(arr []int) {
+//	minNum, maxNum := arr[0], arr[0]
+//	for
+//}

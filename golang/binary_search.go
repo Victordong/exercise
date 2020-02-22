@@ -415,3 +415,33 @@ func findPeakElement(nums []int) int {
 	}
 	return mid
 }
+
+func findPos(arr []int, left int, right int) int {
+	temp, i, j := arr[left], left, right
+	for i < j {
+		for arr[j] >= temp && i < j {
+			j--
+		}
+		arr[i] = arr[j]
+		for arr[i] <= temp && i < j {
+			i++
+		}
+		arr[j] = arr[i]
+	}
+	arr[i] = temp
+	return i
+}
+
+func getLeastNumbers(arr []int, k int) []int {
+	left, right := 0, len(arr)-1
+	for {
+		pos := findPos(arr, left, right)
+		if pos == k-1 {
+			return arr[:k-1]
+		} else if pos < k-1 {
+			left = pos + 1
+		} else {
+			right = pos - 1
+		}
+	}
+}

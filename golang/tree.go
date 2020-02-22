@@ -421,30 +421,70 @@ func generateTrees(n int) []*TreeNode {
 }
 
 type Trie struct {
-	value    byte
-	children []*ListNode
-	indices  string
+	children [26]*Trie
+	end      bool
 }
 
-///** Initialize your data structure here. */
-//func Constructor() Trie {
-//
-//}
-//
-///** Inserts a word into the trie. */
-//func (this *Trie) Insert(word string) {
-//
-//}
-//
-///** Returns if the word is in the trie. */
-//func (this *Trie) Search(word string) bool {
-//
-//}
-//
-///** Returns if there is any word in the trie that starts with the given prefix. */
-//func (this *Trie) StartsWith(prefix string) bool {
-//
-//}
+/** Initialize your data structure here. */
+func Constructor() Trie {
+	var root Trie
+	var children [26]*Trie
+	root.children = children
+	return root
+}
+
+func (this *Trie) partInsert(word string, index int, n int) {
+	if index == n {
+		return
+	}
+
+	if this.children[word[index]-'a'] == nil {
+		newNode := new(Trie)
+		var children [26]*Trie
+		newNode.children = children
+		this.children[word[index]-'a'] = newNode
+	}
+
+	if index == n-1 {
+		this.children[word[index]-'a'].end = true
+	}
+
+	this.children[word[index]-'a'].partInsert(word, index+1, n)
+}
+
+/** Inserts a word into the trie. */
+func (this *Trie) Insert(word string) {
+	this.partInsert(word, 0, len(word))
+}
+
+/** Returns if the word is in the trie. */
+func (this *Trie) Search(word string) bool {
+	cur := this
+	for i := 0; i < len(word); i++ {
+		cur = cur.children[word[i]-'a']
+		if cur == nil {
+			return false
+		}
+	}
+	if cur.end == true {
+		return true
+	} else {
+		return false
+	}
+}
+
+/** Returns if there is any word in the trie that starts with the given prefix. */
+func (this *Trie) StartsWith(prefix string) bool {
+	cur := this
+	for i := 0; i < len(prefix); i++ {
+		cur = cur.children[prefix[i]-'a']
+		if cur == nil {
+			return false
+		}
+	}
+	return false
+}
+
 func rightSideView(root *TreeNode) []int {
 	var last, nextLast, cur *TreeNode = root, nil, nil
 	queue := make([]*TreeNode, 0)
@@ -469,12 +509,12 @@ func rightSideView(root *TreeNode) []int {
 	return result
 }
 
-func pathTo(root, p, q *TreeNode, parents **TreeNode) bool {
+func pathTo1(root, p, q *TreeNode, parents **TreeNode) bool {
 	if root == nil {
 		return false
 	}
-	successL := pathTo(root.Left, p, q, parents)
-	successR := pathTo(root.Right, p, q, parents)
+	successL := pathTo1(root.Left, p, q, parents)
+	successR := pathTo1(root.Right, p, q, parents)
 	var part int = 0
 	if successL {
 		part += 1
@@ -491,12 +531,11 @@ func pathTo(root, p, q *TreeNode, parents **TreeNode) bool {
 	return part > 0
 }
 
-func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+func lowestCommonAncestor1(root, p, q *TreeNode) *TreeNode {
 	var result *TreeNode = nil
-	pathTo(root, p, q, &result)
+	pathTo1(root, p, q, &result)
 	return result
 }
-
 
 func partInvertTree(root *TreeNode) {
 
@@ -509,16 +548,81 @@ func invertTree(root *TreeNode) *TreeNode {
 	trees := make([]*TreeNode, 0)
 	trees = append(trees, root)
 	var cur *TreeNode
-	for len(trees)!=0 {
+	for len(trees) != 0 {
 		cur = trees[0]
 		trees = trees[1:]
 		cur.Left, cur.Right = cur.Right, cur.Left
-		if cur.Left!= nil {
+		if cur.Left != nil {
 			trees = append(trees, cur.Left)
 		}
-		if cur.Right!= nil {
+		if cur.Right != nil {
 			trees = append(trees, cur.Right)
 		}
 	}
 	return root
+}
+
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+	if p != nil && q != nil {
+		if p.Val != q.Val {
+			return false
+		}
+		return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+	} else {
+		if p == nil && q == nil {
+			return true
+		} else {
+			return false
+		}
+	}
+}
+
+func partSymmetric(left *TreeNode, right *TreeNode) bool {
+	if left != nil && right != nil {
+		if left.Val != right.Val {
+			return false
+		}
+		return partSymmetric(left.Left, right.Right) && partSymmetric(left.Right, right.Left)
+	} else {
+		if left == nil && right == nil {
+			return true
+		} else {
+			return false
+		}
+	}
+
+}
+
+func isSymmetric(root *TreeNode) bool {
+	return partSymmetric(root.Left, root.Right)
+}
+
+func partCommonAncestor(root, p, q *TreeNode, part **TreeNode) bool {
+	if root == nil {
+		return false
+	}
+	result := 0
+	if partCommonAncestor(root.Left, p, q, part) {
+		result += 1
+	}
+	if partCommonAncestor(root.Right, p, q, part) {
+		result += 1
+	}
+	if root == p || root == q {
+		result += 1
+	}
+	if result >= 2 {
+		*part = root
+	}
+	if result > 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	var result *TreeNode
+	partCommonAncestor(root, p, q, &result)
+	return result
 }
