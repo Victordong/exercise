@@ -139,7 +139,7 @@ func partBalance(root *TreeNode, height int) (int, bool) {
 	return max(rightHeight, leftHeight), ifBalance
 }
 
-func isBalanced(root *TreeNode) bool {
+func isBalanced1(root *TreeNode) bool {
 	_, ifBalance := partBalance(root, 0)
 	return ifBalance
 }
@@ -426,7 +426,7 @@ type Trie struct {
 }
 
 /** Initialize your data structure here. */
-func Constructor() Trie {
+func Constructor2() Trie {
 	var root Trie
 	var children [26]*Trie
 	root.children = children
@@ -541,7 +541,7 @@ func partInvertTree(root *TreeNode) {
 
 }
 
-func invertTree(root *TreeNode) *TreeNode {
+func invertTree1(root *TreeNode) *TreeNode {
 	if root == nil {
 		return root
 	}
@@ -664,4 +664,92 @@ func pathSum(root *TreeNode, sum int) [][]int {
 	curList := make([]int, 0)
 	partPathSum(root, sum, curList, 0, &result)
 	return result
+}
+
+func partDiameterOfBinaryTree(root *TreeNode) (int, int) {
+	if root == nil {
+		return 0, 0
+	}
+	leftHeight, leftMax := partDiameterOfBinaryTree(root.Left)
+	rightHeight, rightMax := partDiameterOfBinaryTree(root.Right)
+	return max(leftHeight, rightHeight) + 1, max(leftHeight+rightHeight+1, max(leftMax, rightMax))
+}
+
+func diameterOfBinaryTree(root *TreeNode) int {
+	_, result := partDiameterOfBinaryTree(root)
+	return result
+}
+
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	return max(maxDepth(root.Left), maxDepth(root.Right)) + 1
+}
+
+func partBalanceS(root *TreeNode, result *bool) int {
+	if !*result {
+		return 0
+	}
+	if root == nil {
+		return 0
+	}
+	leftHeight := partBalanceS(root.Left, result)
+	rightHeight := partBalanceS(root.Right, result)
+	if leftHeight-rightHeight > 1 || rightHeight-leftHeight > 1 {
+		*result = false
+	}
+	return max(leftHeight, rightHeight) + 1
+}
+
+func isBalanced(root *TreeNode) bool {
+	result := true
+	partBalanceS(root, &result)
+	return result
+}
+
+func invertTree(root *TreeNode) *TreeNode {
+	trees := make([]*TreeNode, 0)
+	trees = append(trees, root)
+	var cur *TreeNode
+	for len(trees) != 0 {
+		cur = trees[0]
+		trees = trees[1:]
+		cur.Right, cur.Left = cur.Left, cur.Right
+		if cur.Left != nil {
+			trees = append(trees, cur.Left)
+		}
+		if cur.Right != nil {
+			trees = append(trees, cur.Right)
+		}
+	}
+	return root
+}
+
+func partMergeTrees(t1 *TreeNode, t2 *TreeNode) {
+	if t2 == nil || t1 == nil {
+		return
+	}
+	if t1.Left == nil && t2.Left != nil {
+		t1.Left = t2.Left
+		t2.Left = nil
+	}
+	if t1.Right == nil && t2.Right != nil {
+		t1.Right = t2.Right
+		t2.Right = nil
+	}
+	t1.Val = t1.Val + t2.Val
+	partMergeTrees(t1.Left, t2.Left)
+	partMergeTrees(t1.Right, t2.Right)
+}
+
+func mergeTrees(t1 *TreeNode, t2 *TreeNode) *TreeNode {
+	if t1 == nil {
+		return t2
+	}
+	if t2 == nil {
+		return t1
+	}
+	partMergeTrees(t1, t2)
+	return t1
 }

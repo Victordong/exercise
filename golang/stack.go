@@ -158,3 +158,61 @@ func scoreOfParentheses(S string) int {
 	}
 	return scoreStack[len(scoreStack)-1]
 }
+
+type MyQueue struct {
+	main []int
+	help []int
+}
+
+/** Initialize your data structure here. */
+func Constructor3() MyQueue {
+	return MyQueue{
+		main: make([]int, 0),
+		help: make([]int, 0),
+	}
+}
+
+/** Push element x to the back of queue. */
+func (this *MyQueue) Push(x int) {
+	this.main = append(this.main, x)
+}
+
+/** Removes the element from in front of queue and returns that element. */
+func (this *MyQueue) Pop() int {
+	var cur int
+	for len(this.main) != 0 {
+		cur = this.main[len(this.main)-1]
+		this.main = this.main[:len(this.main)-1]
+		this.help = append(this.help, cur)
+	}
+	result := this.help[len(this.help)-1]
+	this.help = this.help[:len(this.help)-1]
+	for len(this.help) != 0 {
+		cur = this.help[len(this.help)-1]
+		this.help = this.help[:len(this.help)-1]
+		this.main = append(this.main, cur)
+	}
+	return result
+}
+
+/** Get the front element. */
+func (this *MyQueue) Peek() int {
+	var cur int
+	for len(this.main) != 0 {
+		cur = this.main[len(this.main)-1]
+		this.main = this.main[:len(this.main)-1]
+		this.help = append(this.help, cur)
+	}
+	result := this.help[len(this.help)-1]
+	for len(this.help) != 0 {
+		cur = this.help[len(this.help)-1]
+		this.help = this.help[:len(this.help)-1]
+		this.main = append(this.main, cur)
+	}
+	return result
+}
+
+/** Returns whether the queue is empty. */
+func (this *MyQueue) Empty() bool {
+	return len(this.main) == 0
+}

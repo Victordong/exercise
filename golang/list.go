@@ -336,3 +336,63 @@ func oddEvenList(head *ListNode) *ListNode {
 	cur1.Next = second.Next
 	return first.Next
 }
+
+type DoubleListNode struct {
+	Last  *DoubleListNode
+	Next  *DoubleListNode
+	Key   int
+	Value int
+}
+
+type LRUCache struct {
+	help     map[int]*DoubleListNode
+	head     *DoubleListNode
+	tail     *DoubleListNode
+	count    int
+	capacity int
+}
+
+func Constructor(capacity int) LRUCache {
+	newHead := new(DoubleListNode)
+	newTail := new(DoubleListNode)
+	newHead.Next, newHead.Last = newTail, nil
+	newTail.Next, newTail.Last = nil, newHead
+	return LRUCache{
+		help:     make(map[int]*DoubleListNode),
+		head:     newHead,
+		tail:     newTail,
+		capacity: capacity,
+		count:    0,
+	}
+}
+
+func (this *LRUCache) Get(key int) int {
+	curNode := this.help[key]
+	if curNode == nil {
+		return -1
+	}
+	curNode.Next.Last, curNode.Last.Next = curNode.Last, curNode.Next
+	this.head.Next, this.head.Next.Last, curNode.Last, curNode.Next = curNode, curNode, this.head, this.head.Next
+	return curNode.Value
+}
+
+func (this *LRUCache) Put(key int, value int) {
+	curNode := this.help[key]
+	if curNode == nil {
+		newNode := new(DoubleListNode)
+		newNode.Key, newNode.Value = key, value
+		this.help[key] = newNode
+		if this.count < this.capacity {
+			this.head.Next, this.head.Next.Last, newNode.Last, newNode.Next = newNode, newNode, this.head, this.head.Next
+			this.count = this.count + 1
+		} else {
+			delete(this.help, this.tail.Last.Key)
+			this.tail.Last, this.tail.Last.Last.Next = this.tail.Last.Last, this.tail
+			this.head.Next, this.head.Next.Last, newNode.Last, newNode.Next = newNode, newNode, this.head, this.head.Next
+		}
+	} else {
+		curNode.Value = value
+		curNode.Next.Last, curNode.Last.Next = curNode.Last, curNode.Next
+		this.head.Next, this.head.Next.Last, curNode.Last, curNode.Next = curNode, curNode, this.head, this.head.Next
+	}
+}

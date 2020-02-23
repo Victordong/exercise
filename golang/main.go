@@ -2,7 +2,6 @@ package golang
 
 import (
 	"fmt"
-	"sync"
 	"time"
 )
 
@@ -58,23 +57,33 @@ func Main() {
 	//for i := 0; i < 2; i++ {
 	//	<-finalChan
 	//}
-	var pool sync.Pool
-	count := 0
-	pool.New = func() interface{} {
-		count += 1
-		return count
-	}
-	var wg sync.WaitGroup
-	wg.Add(10)
-	for i := 0; i < 10; i++ {
-		go func() {
-			defer wg.Done()
-			a := pool.Get()
-			fmt.Println(a)
-			time.Sleep(time.Second * 3)
-			pool.Put(a)
-		}()
-		time.Sleep(time.Second * 2)
-	}
-	wg.Wait()
+	//var pool sync.Pool
+	//count := 0
+	//pool.New = func() interface{} {
+	//	count += 1
+	//	return count
+	//}
+	//var wg sync.WaitGroup
+	//wg.Add(10)
+	//for i := 0; i < 10; i++ {
+	//	go func() {
+	//		defer wg.Done()
+	//		a := pool.Get()
+	//		fmt.Println(a)
+	//		time.Sleep(time.Second * 3)
+	//		pool.Put(a)
+	//	}()
+	//	time.Sleep(time.Second * 2)
+	//}
+	//wg.Wait()
+	L := Constructor(2)
+	L.Put(1, 1)
+	L.Put(2, 2)
+	L.Get(1)
+	L.Put(3, 3)
+	L.Get(2)
+	L.Put(4, 4)
+	L.Get(1)
+	L.Get(3)
+	L.Get(4)
 }

@@ -31,7 +31,7 @@ func quickSort(nums []int, left int, right int) {
 	quickSort(nums, pos+1, right)
 }
 
-func findKthLargest(nums []int, k int) int {
+func findKthLargest1(nums []int, k int) int {
 	left, right := 0, len(nums)-1
 	for {
 		if left >= right {
@@ -190,3 +190,77 @@ func heapSort(arr []int) {
 //	minNum, maxNum := arr[0], arr[0]
 //	for
 //}
+
+func quickFind(nums []int, left int, right int) int {
+	i, j, temp := left, right, nums[left]
+	for i < j {
+		for nums[j] >= temp && i < j {
+			j--
+		}
+		nums[i] = nums[j]
+		for nums[i] <= temp && i < j {
+			i++
+		}
+		nums[j] = nums[i]
+	}
+	nums[i] = temp
+	return i
+}
+
+func findKthLargest2(nums []int, k int) int {
+	left, right, pos := 0, len(nums)-1, 0
+	for {
+		pos = quickFind(nums, left, right)
+		if pos == k {
+			return nums[k]
+		} else if pos > k {
+			right = pos
+		} else {
+			left = pos
+		}
+	}
+}
+
+func heapFindKthLargest(nums []int, begin int, end int) {
+	father := begin
+	son := father*2 + 1
+	for son <= end {
+		if son+1 <= end && nums[son] < nums[son+1] {
+			son = son + 1
+		}
+		if nums[father] > nums[son] {
+			return
+		} else {
+			nums[father], nums[son] = nums[son], nums[father]
+			father = son
+			son = father*2 + 1
+		}
+	}
+}
+
+func findKthLargest(nums []int, k int) int {
+	for i := len(nums)/2 - 1; i >= 0; i-- {
+		heapFindKthLargest(nums, i, len(nums)-1)
+	}
+	total := 1
+	for total < k {
+		nums[0], nums[len(nums)-total] = nums[len(nums)-total], nums[0]
+		heapFindKthLargest(nums, 0, len(nums)-total-1)
+	}
+	return nums[0]
+}
+
+func sortColors(nums []int) {
+	left, right := 0, len(nums)-1
+	for i := left; i <= right; {
+		if nums[i] == 0 {
+			nums[left], nums[i] = nums[i], nums[left]
+			left, i = left+1, i+1
+		} else if nums[i] == 1 {
+			i = i + 1
+		} else if nums[i] == 2 {
+			nums[right], nums[i] = nums[i], nums[right]
+			right = right - 1
+		}
+	}
+}
