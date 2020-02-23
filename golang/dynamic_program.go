@@ -1068,11 +1068,6 @@ func numSquares1(n int) int {
 	return dp[n]
 }
 
-func integerBreak(n int) int {
-	var result int
-	return result
-}
-
 //func longestSubstring(s string, k int) int {
 //
 //}
@@ -1185,4 +1180,15 @@ func longestConsecutive(nums []int) int {
 		}
 	}
 	return result
+}
+
+func integerBreak(n int) int {
+	dp := make([]int, n+1)
+	dp[1], dp[2] = 1, 1
+	for i := 3; i < n; i++ {
+		for j := 1; j < i; j++ {
+			dp[i] = max(dp[i-j]*j, (i-j)*j)
+		}
+	}
+	return dp[n]
 }

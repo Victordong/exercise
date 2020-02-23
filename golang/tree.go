@@ -626,3 +626,42 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	partCommonAncestor(root, p, q, &result)
 	return result
 }
+
+func partPathSum1(root *TreeNode, sum int, cur int) bool {
+	if root == nil {
+		return false
+	}
+	cur = cur + root.Val
+	if cur == sum {
+		return true
+	} else if cur > sum {
+		return false
+	}
+	return partPathSum1(root.Left, sum, cur) || partPathSum1(root.Left, sum, cur)
+}
+
+func hasPathSum1(root *TreeNode, sum int) bool {
+	return partPathSum1(root, sum, 0)
+}
+
+func partPathSum(root *TreeNode, sum int, curList []int, cur int, result *[][]int) {
+	if root == nil {
+		return
+	}
+	cur = cur + root.Val
+	if cur == sum && root.Left == nil && root.Right == nil {
+		*result = append(*result, curList)
+	}
+	nowCurList := make([]int, len(curList))
+	copy(nowCurList, curList)
+	nowCurList = append(nowCurList, root.Val)
+	partPathSum(root.Left, sum, curList, cur, result)
+	partPathSum(root.Right, sum, curList, cur, result)
+}
+
+func pathSum(root *TreeNode, sum int) [][]int {
+	result := make([][]int, 0)
+	curList := make([]int, 0)
+	partPathSum(root, sum, curList, 0, &result)
+	return result
+}

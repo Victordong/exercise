@@ -158,7 +158,8 @@ func merge(intervals [][]int) [][]int {
 }
 
 func partHeapSort(arr []int, begin int, end int) {
-	father, son := begin, begin*2+1
+	father := begin
+	son := father*2 + 1
 	for son <= end {
 		if son+1 <= end && arr[son] > arr[son+1] {
 			son = son + 1
@@ -168,7 +169,7 @@ func partHeapSort(arr []int, begin int, end int) {
 		} else {
 			arr[father], arr[son] = arr[son], arr[father]
 			father = son
-			son = father*2 + 1
+			son = father * 2
 		}
 	}
 }
@@ -178,10 +179,11 @@ func heapSort(arr []int) {
 	for i := n/2 - 1; i >= 0; i-- {
 		partHeapSort(arr, i, n-1)
 	}
-	for i := n - 1; i >= 0; i-- {
+	for i := n - 1; i > 0; i-- {
 		arr[i], arr[0] = arr[0], arr[i]
 		partHeapSort(arr, 0, i-1)
 	}
+	fmt.Println(arr)
 }
 
 //func countingSort(arr []int) {
