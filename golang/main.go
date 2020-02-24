@@ -76,14 +76,5 @@ func Main() {
 	//	time.Sleep(time.Second * 2)
 	//}
 	//wg.Wait()
-	L := Constructor(2)
-	L.Put(1, 1)
-	L.Put(2, 2)
-	L.Get(1)
-	L.Put(3, 3)
-	L.Get(2)
-	L.Put(4, 4)
-	L.Get(1)
-	L.Get(3)
-	L.Get(4)
+	canPartition([]int{1, 5, 11, 5})
 }

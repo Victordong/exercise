@@ -235,7 +235,6 @@ func partSolveQueens(dp [100][100]bool, floor int, n int, result *int) {
 			partSolveQueens(partDp, floor+1, n, result)
 		}
 
-
 	}
 
 }
@@ -246,4 +245,81 @@ func totalNQueens(n int) int {
 	partSolveQueens(dp, 0, n, &result)
 	//fmt.Println(result)
 	return result
+}
+
+func partCombinationSum(candidates []int, target int, result *[][]int, cur int, partResult []int, index int) bool {
+	if target == cur {
+		*result = append(*result, partResult)
+		return false
+	}
+	if target < cur {
+		return false
+	}
+	for i := index; i < len(candidates); i++ {
+		newPart := make([]int, len(partResult))
+		copy(newPart, partResult)
+		newPart = append(newPart, candidates[i])
+		part := partCombinationSum(candidates, target, result, cur+candidates[i], newPart, i)
+		if !part {
+			return true
+		}
+	}
+	return true
+}
+
+func combinationSum(candidates []int, target int) [][]int {
+	result := make([][]int, 0)
+	sort.Ints(candidates)
+	partCombinationSum(candidates, target, &result, 0, []int{}, 0)
+	return result
+}
+func partCombinationSum2(candidates []int, target int, result *[][]int, cur int, partResult []int, index int) bool {
+	if target == cur {
+		*result = append(*result, partResult)
+		return false
+	}
+	if target < cur {
+		return false
+	}
+	for i := index; i < len(candidates); i++ {
+		if i > 0 && candidates[i-1] == candidates[i] {
+			continue
+		}
+		newPart := make([]int, len(partResult))
+		copy(newPart, partResult)
+		newPart = append(newPart, candidates[i])
+		part := partCombinationSum2(candidates, target, result, cur+candidates[i], newPart, i+1)
+		if !part {
+			return true
+		}
+	}
+	return true
+}
+func combinationSum2(candidates []int, target int) [][]int {
+	result := make([][]int, 0)
+	sort.Ints(candidates)
+	partCombinationSum2(candidates, target, &result, 0, []int{}, 0)
+	return result
+}
+
+func partCombinationSum3(target int, result *[][]int, cur int, partResult []int, index int, nums int) bool {
+	if cur == target {
+		*result = append(*result, partResult)
+		return false
+	}
+	if target < cur {
+		return false
+	}
+	if len(partResult) == nums {
+		return true
+	}
+	for i := 1; i <= 9; i++ {
+		part := partCombinationSum3(target, result, cur, partResult, index, nums)
+		if !part {
+			return true
+		}
+	}
+}
+func combinationSum3(k int, n int) [][]int {
+
 }

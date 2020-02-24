@@ -334,3 +334,18 @@ func checkValidString1(s string) bool {
 	}
 	return false
 }
+
+func isUgly(num int) bool {
+	for num != 1 {
+		if num%2 == 0 {
+			num /= 2
+		} else if num%5 == 0 {
+			num /= 5
+		} else if num%3 == 0 {
+			num /= 3
+		} else {
+			return false
+		}
+	}
+	return true
+}

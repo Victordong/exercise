@@ -1,6 +1,9 @@
 package golang
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 func longestPalindrome(s string) string {
 	var a [1001][1001]int
@@ -474,50 +477,6 @@ func lengthOfLIS1(nums []int) int {
 	return max
 }
 
-func mincostTickets(days []int, costs []int) int {
-	n := len(days)
-	if n == 0 {
-		return 0
-	}
-	var dp [1000]int
-	dp[0] = 0
-	dp[1] = min(costs[0], min(costs[1], costs[2]))
-	for i := 2; i <= n; i++ {
-		var index1 int
-		var index2 int
-		if days[i-1] <= 7 {
-			index1 = 0
-			index2 = 0
-		} else if days[i-1] <= 30 {
-			j := i - 2
-			index1 = i - 1
-			for ; j >= 0; j-- {
-				if days[i-1]-days[j] < 7 {
-					index1 = j
-				}
-			}
-			index2 = 0
-		} else {
-			j := i - 2
-			index1 = i - 1
-			for ; j >= 0; j-- {
-				if days[i-1]-days[j] < 7 {
-					index1 = j
-				}
-			}
-			j = i - 2
-			index2 = j
-			for ; j >= 0; j-- {
-				if days[i-1]-days[j] < 30 {
-					index2 = j
-				}
-			}
-		}
-		dp[i] = min(dp[i-1]+costs[0], min(dp[index1]+costs[1], dp[index2]+costs[2]))
-	}
-	return dp[n]
-}
-
 func lengthOfLIS2(nums []int) int {
 	n := len(nums)
 	if n == 0 {
@@ -738,7 +697,7 @@ func PredictTheWinner(nums []int) bool {
 	return false
 }
 
-func contains(s string, wordDict []string) bool {
+func contains1(s string, wordDict []string) bool {
 	for _, str := range wordDict {
 		if s == str {
 			return true
@@ -747,7 +706,7 @@ func contains(s string, wordDict []string) bool {
 	return false
 }
 
-func wordBreak(s string, wordDict []string) bool {
+func wordBreak1(s string, wordDict []string) bool {
 	n := len(s)
 	m := len(wordDict)
 	if n == 0 {
@@ -1175,4 +1134,164 @@ func integerBreak(n int) int {
 		}
 	}
 	return dp[n]
+}
+
+func canPartition(nums []int) bool {
+	n, total := len(nums), 0
+	for i := 0; i < n; i++ {
+		total += nums[i]
+	}
+	if total%2 != 0 {
+		return false
+	}
+	dp := make([][]bool, 0)
+	for i := 0; i < n; i++ {
+		dp = append(dp, make([]bool, total/2+1))
+	}
+	for i := 0; i < n; i++ {
+		dp[i][0] = true
+	}
+	for i := 0; i <= total/2; i++ {
+		if i == nums[0] {
+			dp[0][i] = true
+		}
+	}
+	for i := 1; i < n; i++ {
+		for j := 1; j <= total/2; j++ {
+			if j >= nums[i] && dp[i-1][j-nums[i]] {
+				dp[i][j] = true
+			} else if dp[i-1][j] {
+				dp[i][j] = true
+			}
+		}
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j <= total/2; j++ {
+			fmt.Print(dp[i][j], " ")
+		}
+		fmt.Println()
+	}
+	return dp[n-1][total/2]
+}
+
+func findTargetSumWays(nums []int, S int) int {
+	n := len(nums)
+	total := 0
+	for i := 0; i < n; i++ {
+		total += nums[i]
+	}
+	if total < S || S < total*-1 {
+		return 0
+	}
+	dp := make([][]int, 0)
+	for i := 0; i < n; i++ {
+		dp = append(dp, make([]int, 2000))
+	}
+	left, right := 1000-nums[0], 1000+nums[0]
+	dp[0][1000+nums[0]], dp[0][1000-nums[0]] = 1, 1
+	for i := 1; i < n; i++ {
+		left, right = left-nums[i], right+nums[i]
+		for j := left; j <= right; j++ {
+			dp[i][j] = dp[i-1][j-nums[i]] + dp[i-1][j+nums[i]]
+		}
+	}
+	left, right = 1000, 1000
+	for i := 0; i < n; i++ {
+		left, right = left-nums[i], right+nums[i]
+		for j := left; j <= right; j++ {
+			fmt.Println(dp[i][j])
+		}
+	}
+	return dp[n-1][S+1000]
+}
+
+func contains(part string, wordDict []string) bool {
+	for _, value := range wordDict {
+		if value == part {
+			return true
+
+		}
+	}
+	return false
+}
+
+func wordBreak(s string, wordDict []string) bool {
+	dp := make([]bool, len(s)+1)
+	dp[0] = true
+	for i := 0; i < len(s); i++ {
+		for j := 0; j <= i+1; j++ {
+			newWord := s[i:j]
+			if dp[i] && contains(newWord, wordDict) {
+				dp[j] = true
+			}
+		}
+	}
+	return dp[len(s)]
+}
+
+func combinationSum4(nums []int, target int) int {
+	n := len(nums)
+	dp := make([]int, target+1)
+	dp[0] = 1
+	for i := 0; i < n; i++ {
+		for j := 1; j <= target; j++ {
+			if j >= nums[i] {
+				dp[j] = dp[j] + dp[j-nums[i]]
+			}
+		}
+	}
+	return dp[target]
+}
+
+func minPathSum(grid [][]int) int {
+	m := len(grid)
+	if m == 0 {
+		return 0
+	}
+	n := len(grid[0])
+	if n == 0 {
+		return 0
+	}
+	dp := make([][]int, 0)
+	for i := 0; i < m; i++ {
+		dp = append(dp, make([]int, n))
+	}
+	dp[0][0] = grid[0][0]
+	for i := 1; i < m; i++ {
+		dp[i][0] = dp[i-1][0] + grid[i][0]
+	}
+	for i := 1; i < n; i++ {
+		dp[0][i] = dp[0][i-1] + grid[0][i]
+	}
+	for i := 1; i < m; i++ {
+		for j := 1; j < n; j++ {
+			dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]
+		}
+	}
+	return dp[m-1][n-1]
+}
+
+type NumArray struct {
+	result []int
+}
+
+func Constructor(nums []int) NumArray {
+	result := make([]int, 0)
+	result = append(result, nums[0])
+	for i := 1; i < len(nums); i++ {
+		result = append(result, nums[i]+result[i-1])
+	}
+	return NumArray{result: result}
+}
+
+func (this *NumArray) SumRange(i int, j int) int {
+	if i == 0 {
+		return this.result[j]
+	} else {
+		return this.result[j] - this.result[i-1]
+	}
+}
+
+func mincostTickets(days []int, costs []int) int {
+
 }

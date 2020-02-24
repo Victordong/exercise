@@ -352,7 +352,7 @@ type LRUCache struct {
 	capacity int
 }
 
-func Constructor(capacity int) LRUCache {
+func Constructor4(capacity int) LRUCache {
 	newHead := new(DoubleListNode)
 	newTail := new(DoubleListNode)
 	newHead.Next, newHead.Last = newTail, nil
@@ -395,4 +395,34 @@ func (this *LRUCache) Put(key int, value int) {
 		curNode.Next.Last, curNode.Last.Next = curNode.Last, curNode.Next
 		this.head.Next, this.head.Next.Last, curNode.Last, curNode.Next = curNode, curNode, this.head, this.head.Next
 	}
+}
+
+func swapPairs(head *ListNode) *ListNode {
+	var cur, pre *ListNode = head, nil
+	var nextBegin, nowBegin, result *ListNode = head, nil, nil
+	total := 2
+	for cur != nil {
+		pre = nil
+		for cur != nil && total > 0 {
+			cur, cur.Next, pre = cur.Next, pre, cur
+			total = total - 1
+		}
+		if total == 0 && nowBegin == nil {
+			result, nextBegin, nowBegin = pre, cur, nextBegin
+		} else if total == 0 && nowBegin != nil {
+			nowBegin.Next, nowBegin, nextBegin = pre, nextBegin, cur
+		} else {
+			cur, pre = pre, nil
+			for cur != nil {
+				cur.Next, cur, pre = pre, cur.Next, cur
+			}
+			if nowBegin != nil {
+				nowBegin.Next = pre
+			} else {
+				result = head
+			}
+		}
+		total = 2
+	}
+	return result
 }
