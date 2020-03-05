@@ -1292,6 +1292,6 @@ func (this *NumArray) SumRange(i int, j int) int {
 	}
 }
 
-func mincostTickets(days []int, costs []int) int {
-
-}
+//func mincostTickets(days []int, costs []int) int {
+//
+//}

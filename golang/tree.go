@@ -753,3 +753,28 @@ func mergeTrees(t1 *TreeNode, t2 *TreeNode) *TreeNode {
 	partMergeTrees(t1, t2)
 	return t1
 }
+
+func widthOfBinaryTree(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	trees, treeNum := make([]*TreeNode, 0), make([]int, 0)
+	var maxNumber, curNum = 1, 0
+	var end, nextEnd, cur *TreeNode
+	trees, treeNum, end = append(trees, root), append(treeNum, 0), root
+	for len(trees) != 0 {
+		cur, curNum, trees, treeNum = trees[0], treeNum[0], trees[1:], treeNum[1:]
+		if cur.Left != nil {
+			trees, nextEnd = append(trees, cur.Left), cur.Left
+			treeNum = append(treeNum, curNum*2)
+		}
+		if cur.Right != nil {
+			trees, nextEnd = append(trees, cur.Right), cur.Right
+			treeNum = append(treeNum, curNum*2+1)
+		}
+		if cur == end && len(trees) != 0 {
+			end, maxNumber = nextEnd, max(maxNumber, treeNum[len(treeNum)-1]-treeNum[0]+1)
+		}
+	}
+	return maxNumber
+}
