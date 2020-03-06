@@ -778,3 +778,24 @@ func widthOfBinaryTree(root *TreeNode) int {
 	}
 	return maxNumber
 }
+
+func reverseTree(root *TreeNode) {
+	if root == nil {
+		return
+	}
+	reverseTree(root.Left)
+	reverseTree(root.Right)
+	root.Left, root.Right = root.Right, root.Left
+}
+
+func partFlatten(root *TreeNode) *TreeNode {
+	if root.Left == nil && root.Right == nil {
+		return root
+	}
+	return root
+}
+
+func flatten(root *TreeNode) {
+	reverseTree(root)
+
+}
