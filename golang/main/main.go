@@ -27,14 +27,17 @@ func main() {
 	if wValueOf.CanAddr() {
 		fmt.Println(wValueOf.Addr())
 		fmt.Println("can")
-	} else {
-		fmt.Println("can not")
 		if wValueOf.FieldByName("Owner").CanSet() {
 			//newValue := reflect.New(wValueOf.Elem().FieldByName("Owner").Type())
 			//wValueOf.Elem().FieldByName("Owner").Set()
+			v := reflect.ValueOf("2313123")
+			wValueOf.FieldByName("Owner").Set(v)
+			fmt.Println(w)
 			fmt.Println("can set")
 		} else {
 			fmt.Println("can not set")
 		}
+	} else {
+		fmt.Println("can not")
 	}
 }
