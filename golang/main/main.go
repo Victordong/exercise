@@ -32,6 +32,8 @@ func main() {
 			//wValueOf.Elem().FieldByName("Owner").Set()
 			v := reflect.ValueOf("2313123")
 			wValueOf.FieldByName("Owner").Set(v)
+			vNum := reflect.ValueOf(1.1)
+			wValueOf.FieldByName("Num").Set(vNum)
 			fmt.Println(w)
 			fmt.Println("can set")
 		} else {
