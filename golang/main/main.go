@@ -26,8 +26,6 @@ func main() {
 	fmt.Println(wValueOf.FieldByName("Owner").Type())
 	if wValueOf.CanAddr() {
 		if wValueOf.FieldByName("Owner").CanSet() {
-			//newValue := reflect.New(wValueOf.Elem().FieldByName("Owner").Type())
-			//wValueOf.Elem().FieldByName("Owner").Set()
 			v := reflect.ValueOf("2313123")
 			wValueOf.FieldByName("Owner").Set(v)
 			vNum := reflect.ValueOf(1.1)
