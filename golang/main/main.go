@@ -30,10 +30,7 @@ func main() {
 			wValueOf.FieldByName("Owner").Set(v)
 			vNum := reflect.ValueOf(1.1)
 			wValueOf.FieldByName("Num").Set(vNum)
-			fmt.Println(w)
-			fmt.Println("can set")
 		} else {
-			fmt.Println("can not set")
 		}
 	} else {
 		fmt.Println("can not")
