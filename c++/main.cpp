@@ -1,11 +1,11 @@
 #include <iostream>
-#include <vector>
-#include <stack>
 #include <queue>
+#include <stack>
+#include <vector>
 using namespace std;
 
 class Solution {
-public:
+   public:
     string longestPalindrome(string s) {
         int a[1001][1001];
         int n = s.length();
@@ -20,13 +20,13 @@ public:
                 a[i - 1][i] = true;
             }
         }
-        for(int m=2;m<n;m++) {
+        for (int m = 2; m < n; m++) {
             for (int i = 0; i < n; i++) {
-                int j = i+m;
-                if(j>=n) {
+                int j = i + m;
+                if (j >= n) {
                     break;
                 }
-                if(s[i]==s[j]&&a[i+1][j-1]) {
+                if (s[i] == s[j] && a[i + 1][j - 1]) {
                     a[i][j] = true;
                 } else {
                     a[i][j] = false;
@@ -37,31 +37,32 @@ public:
         int max = 0;
         int begin = 0;
         int end = 0;
-        for(int i=0;i<n;i++) {
-            for(int j=i;j<n;j++) {
-                if(a[i][j] && j-i>max) {
-                    max = j-i;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (a[i][j] && j - i > max) {
+                    max = j - i;
                     begin = i;
                     end = j;
                 }
             }
         }
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<i;j++) {
-                cout<<0<<" ";
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                cout << 0 << " ";
             }
-            for(int j=i;j<n;j++) {
-                cout<<a[i][j]<<" ";
+            for (int j = i; j < n; j++) {
+                cout << a[i][j] << " ";
             }
-            cout<<endl;
+            cout << endl;
         }
-        return s.substr(begin, end-begin+1);
+        return s.substr(begin, end - begin + 1);
     }
 };
+
 int main() {
     string A = "abb";
     Solution i;
-    cout<< i.longestPalindrome(A);
-//    r.reverse(A, 4,9);
+    cout << i.longestPalindrome(A);
+    //    r.reverse(A, 4,9);
     return 0;
 }
