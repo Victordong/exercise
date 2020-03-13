@@ -22,7 +22,7 @@ class Quote {
     double price = 0.0;
 };
 
-class Disc_Quote : public Quote {
+class Disc_Quote : private Quote {
    public:
     Disc_Quote() = default;
     Disc_Quote(const std::string& bookNo,
@@ -30,50 +30,70 @@ class Disc_Quote : public Quote {
                std::size_t quantity,
                double discount)
         : Quote(bookNo, price), discount(discount), quantity(quantity){};
-    ~Disc_Quote();
+    ~Disc_Quote(){};
     virtual double net_price(std::size_t) const = 0;
 
+   public:
+    using Quote::isbn;
+
    protected:
+    using Quote::price;
     double discount = 0.0;
     std::size_t quantity = 0;
 };
 
-Disc_Quote::~Disc_Quote() {}
+class Bulk_Quote : private Disc_Quote {
+    friend void test_get(Bulk_Quote&);
 
-class Bulk_Quote : public Quote {
    public:
     Bulk_Quote() = default;
     Bulk_Quote(const std::string&, double, std::size_t, double);
     virtual double net_price(std::size_t n) const override;
-    void test() { std::cout << "this is a test" << std::endl; };
-
-   private:
-    std::size_t min_qty = 0;
-    double discount = 0.0;
-};
-
-class Son_Quote : public Bulk_Quote {
-   public:
-    Son_Quote() = default;
-    Son_Quote(const std::string& bookNo,
-              double price,
-              std::size_t min_qty,
-              double discount)
-        : Bulk_Quote(bookNo, price, min_qty, discount){};
 };
 
 Bulk_Quote::Bulk_Quote(const std::string& bookNo,
                        double price,
-                       std::size_t min_qty,
+                       std::size_t quantity,
                        double discount)
-    : Quote(bookNo, price), min_qty(min_qty), discount(discount) {}
+    : Disc_Quote(bookNo, price, quantity, discount) {}
 
 double Bulk_Quote::net_price(std::size_t n = 11) const {
     std::cout << n << std::endl;
     std::cout << "bulk quote" << std::endl;
-    if (n >= min_qty) {
+    if (n >= quantity) {
         return n * (1 - discount) * price;
     } else {
         return n * price;
     }
+}
+
+void test_get(Bulk_Quote& b) {
+    std::cout << b.discount << std::endl;
+}
+
+class HasPtr {
+   private:
+    std::string* ps;
+    int index;
+
+   public:
+    explicit HasPtr(std::string& str) : ps(new std::string(str)), index(0){};
+    HasPtr(HasPtr& ptr) {
+        ps = ptr.ps;
+        ptr.ps = nullptr;
+    };
+    HasPtr& operator=(HasPtr& ptr) {
+        ps = ptr.ps;
+        ptr.ps = nullptr;
+        return *this;
+    };
+    ~HasPtr() { delete ps; };
+};
+
+int main(int argc, char const* argv[]) {
+    std::string a_str = "13";
+    HasPtr a(a_str);
+    HasPtr b(a_str);
+    b = a;
+    return 0;
 }
