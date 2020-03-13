@@ -71,29 +71,84 @@ void test_get(Bulk_Quote& b) {
     std::cout << b.discount << std::endl;
 }
 
-class HasPtr {
+class HasPtr final {
    private:
     std::string* ps;
-    int index;
+    std::size_t* total;
 
    public:
-    explicit HasPtr(std::string& str) : ps(new std::string(str)), index(0){};
-    HasPtr(HasPtr& ptr) {
-        ps = ptr.ps;
-        ptr.ps = nullptr;
+    explicit HasPtr(std::string& str)
+        : ps(new std::string(str)), total(new std::size_t(1)){};
+    HasPtr(const HasPtr& ptr) : ps(new std::string(*ptr.ps)), total(ptr.total) {
+        ++*ptr.total;
     };
-    HasPtr& operator=(HasPtr& ptr) {
+    HasPtr& operator=(const HasPtr& ptr) {
+        ++*ptr.total;
+        if (--*total == 0) {
+            delete ps;
+            delete total;
+        }
         ps = ptr.ps;
-        ptr.ps = nullptr;
+        total = ptr.total;
         return *this;
     };
-    ~HasPtr() { delete ps; };
+    void swap(HasPtr& lptr, HasPtr& rptr) {
+        using std::swap;
+        swap(lptr.ps, rptr.ps);
+        swap(lptr.total, rptr.total);
+    }
+    ~HasPtr() {
+        if (--*total == 0) {
+            delete ps;
+            delete total;
+        }
+    };
+};
+
+class AddClass {
+    friend AddClass operator+(int, const AddClass&);
+
+   private:
+    int total;
+
+   public:
+    AddClass() : total(0){};
+    AddClass(int i) : total(i){};
+    AddClass& operator+(const AddClass& base) {
+        total = total + base.total;
+        return *this;
+    };
+    AddClass& operator+(int i) {
+        total = total + i;
+        return *this;
+    };
+};
+
+AddClass operator+(int i, const AddClass& base) {
+    return AddClass(i + base.total);
+}
+
+class NoCopy {
+   public:
+    NoCopy() = default;
+    ~NoCopy() = default;
+    NoCopy(const NoCopy&) = delete;
+    NoCopy& operator=(const NoCopy&) = delete;
+};
+
+class HasQuote {
+   private:
+    HasPtr h;
+
+   public:
+    HasQuote() = default;
+    ~HasQuote() = default;
+    void swap(HasQuote& l, HasQuote& r) {
+        using std::swap;
+        swap(l.h, r.h);
+    }
 };
 
 int main(int argc, char const* argv[]) {
-    std::string a_str = "13";
-    HasPtr a(a_str);
-    HasPtr b(a_str);
-    b = a;
     return 0;
 }
