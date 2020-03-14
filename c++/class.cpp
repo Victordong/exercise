@@ -68,10 +68,6 @@ double Bulk_Quote::net_price(std::size_t n = 11) const {
     }
 }
 
-void test_get(Bulk_Quote& b) {
-    std::cout << b.discount << std::endl;
-}
-
 class HasPtr final {
    private:
     std::string* ps;
@@ -83,14 +79,13 @@ class HasPtr final {
     HasPtr(const HasPtr& ptr) : ps(new std::string(*ptr.ps)), total(ptr.total) {
         ++*ptr.total;
     };
-    HasPtr& operator=(const HasPtr& ptr) {
-        ++*ptr.total;
-        if (--*total == 0) {
-            delete ps;
-            delete total;
+    HasPtr& operator=(HasPtr&& ptr) {
+        if (&ptr != this) {
+            ps = ptr.ps;
+            total = ptr.total;
+            ptr.ps = nullptr;
+            ptr.total = 0;
         }
-        ps = ptr.ps;
-        total = ptr.total;
         return *this;
     };
     void swap(HasPtr& lptr, HasPtr& rptr) {
@@ -235,6 +230,18 @@ void Message::swap(Message& lm, Message& rm) {
     }
 }
 
+int part() {
+    return 10;
+}
+
+int test(int&& j) {
+    return 10;
+}
+
 int main(int argc, char const* argv[]) {
+    std::string str = "13";
+    HasPtr h(str);
+    HasPtr b(str);
+    h = std::move(b);
     return 0;
 }
