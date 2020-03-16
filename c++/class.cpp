@@ -145,90 +145,90 @@ class HasQuote {
     }
 };
 
-// class Folder;
+class Folder;
 
-// class Message {
-//     friend class Folder;
+class Message {
+    friend class Folder;
 
-//    public:
-//     explicit Message(const std::string& str = "") : content(str){};
-//     Message(const Message& m) : content(m.content), folders(m.folders) {
-//         add_to_folders(m);
-//     };
-//     Message& operator=(const Message&);
-//     ~Message() { remove_from_folders(); };
-//     void save(Folder&);
-//     void remove(Folder&);
-//     void swap(Message&, Message&);
+   public:
+    explicit Message(const std::string& str = "") : content(str){};
+    Message(const Message& m) : content(m.content), folders(m.folders) {
+        add_to_folders(m);
+    };
+    Message& operator=(const Message&);
+    ~Message() { remove_from_folders(); };
+    void save(Folder&);
+    void remove(Folder&);
+    void swap(Message&, Message&);
 
-//    private:
-//     std::string content;
-//     std::set<Folder*> folders;
-//     void add_to_folders(const Message&);
-//     void remove_from_folders();
-// };
+   private:
+    std::string content;
+    std::set<Folder*> folders;
+    void add_to_folders(const Message&);
+    void remove_from_folders();
+};
 
-// class Folder {
-//     friend class Message;
+class Folder {
+    friend class Message;
 
-//    public:
-//     Folder(){};
-//     Folder(const Folder& folder);
-//     void add_message(Message*);
-//     void remove_message(Message*);
-//     ~Folder();
+   public:
+    Folder(){};
+    Folder(const Folder& folder);
+    void add_message(Message*);
+    void remove_message(Message*);
+    ~Folder();
 
-//    private:
-//     std::set<Message*> messages;
-// };
+   private:
+    std::set<Message*> messages;
+};
 
-// void Message::save(Folder& folder) {
-//     folders.insert(&folder);
-//     folder.add_message(this);
-// }
+void Message::save(Folder& folder) {
+    folders.insert(&folder);
+    folder.add_message(this);
+}
 
-// void Message::remove(Folder& folder) {
-//     folders.erase(&folder);
-//     folder.remove_message(this);
-// }
+void Message::remove(Folder& folder) {
+    folders.erase(&folder);
+    folder.remove_message(this);
+}
 
-// void Message::add_to_folders(const Message& m) {
-//     for (auto folder : m.folders) {
-//         folder->add_message(this);
-//     }
-// }
+void Message::add_to_folders(const Message& m) {
+    for (auto folder : m.folders) {
+        folder->add_message(this);
+    }
+}
 
-// void Message::remove_from_folders() {
-//     for (auto folder : folders) {
-//         folder->remove_message(this);
-//     }
-// }
+void Message::remove_from_folders() {
+    for (auto folder : folders) {
+        folder->remove_message(this);
+    }
+}
 
-// Message& Message::operator=(const Message& m) {
-//     remove_from_folders();
-//     content = m.content;
-//     folders = m.folders;
-//     add_to_folders(m);
-//     return *this;
-// }
+Message& Message::operator=(const Message& m) {
+    remove_from_folders();
+    content = m.content;
+    folders = m.folders;
+    add_to_folders(m);
+    return *this;
+}
 
-// void Message::swap(Message& lm, Message& rm) {
-//     using std::swap;
-//     for (auto folder : lm.folders) {
-//         folder->remove_message(&lm);
-//     }
-//     for (auto folder : rm.folders) {
-//         folder->remove_message(&rm);
-//     }
-//     swap(lm.content, rm.content);
-//     swap(lm.folders, rm.folders);
-//     for (auto folder : lm.folders) {
-//         folder->add_message(&lm);
-//     }
-//     for (auto folder : rm.folders) {
-//         folder->add_message(&rm);
-//     }
-// }
+void Message::swap(Message& lm, Message& rm) {
+    using std::swap;
+    for (auto folder : lm.folders) {
+        folder->remove_message(&lm);
+    }
+    for (auto folder : rm.folders) {
+        folder->remove_message(&rm);
+    }
+    swap(lm.content, rm.content);
+    swap(lm.folders, rm.folders);
+    for (auto folder : lm.folders) {
+        folder->add_message(&lm);
+    }
+    for (auto folder : rm.folders) {
+        folder->add_message(&rm);
+    }
+}
 
 int part() {
     return 10;
