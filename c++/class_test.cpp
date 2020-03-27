@@ -254,9 +254,6 @@ void test_share_ptr() {
 
 int main() {
     std::map<int, int> m;
-    m[10] = 10;
-    m[11] = 11;
-    m.erase(9);
     std::cout << "123" << std::endl;
     return 0;
 }
