@@ -108,30 +108,23 @@ void test_epoll() {
     std::vector<epoll_event> events(10);
     int epfd = epoll_create1(EPOLL_CLOEXEC);
     int timerfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
-    std::cout << epfd << " " << timerfd << std::endl;
     struct epoll_event ev;
     ev.data.fd = timerfd;
     ev.events = EPOLLIN;
     int result = epoll_ctl(epfd, EPOLL_CTL_ADD, timerfd, &ev);
-    std::cout << result << std::endl;
     itimerspec howlong;
     bzero(&howlong, sizeof howlong);
     howlong.it_value.tv_sec = 5;
     result = ::timerfd_settime(timerfd, 0, &howlong, NULL);
-    std::cout << result << std::endl;
     while (true) {
-        std::cout << "heihei" << std::endl;
         int numEvents =
             epoll_wait(epfd, &*events.begin(), events.size(), 1000 * 10);
         if (numEvents != 0) {
-            std::cout << "123" << std::endl;
             uint64_t buf;
             int num = ::read(timerfd, &buf, sizeof(uint64_t));
 
-            std::cout << num << std::endl;
             result = ::timerfd_settime(timerfd, 0, &howlong, NULL);
             num = ::read(timerfd, &buf, sizeof(uint64_t));
-            std::cout << num << std::endl;
         }
     }
     ::close(epfd);
