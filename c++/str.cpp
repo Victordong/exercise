@@ -18,6 +18,15 @@ struct TreeNode {
             val(x), left(NULL), right(NULL) {
     }
 };
+class Slice {
+   public:
+    char* data();
+    size_t size();
+
+   private:
+    char* slice_b_;
+    char* slice_e_;
+};
 
 class IdenticalTree {
 public:
