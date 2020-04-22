@@ -319,7 +319,13 @@ func partCombinationSum3(target int, result *[][]int, cur int, partResult []int,
 			return true
 		}
 	}
+	return true
 }
-func combinationSum3(k int, n int) [][]int {
 
+func triangleNumber(nums []int) int {
+	return 0
+}
+
+func combinationSum3(k int, n int) [][]int {
+	return nil
 }
