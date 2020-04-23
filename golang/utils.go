@@ -15,3 +15,8 @@ func max(first int, second int) int {
 		return first
 	}
 }
+
+
+func toString() {
+	
+}
