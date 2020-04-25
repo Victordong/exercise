@@ -20,3 +20,7 @@ func max(first int, second int) int {
 func toString() string {
 	return ""
 }
+
+func toInt() int {
+	return 0
+}
