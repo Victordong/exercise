@@ -21,7 +21,7 @@ func (tree *BalanceTree) DeleteNodesWithValue(value interface{}) {
 }
 
 func (tree *BalanceTree) InitBalanceTree() {
-
+	tree.root = new(BalanceNode)
 }
 
 func (tree *BalanceTree) Clear() {}
