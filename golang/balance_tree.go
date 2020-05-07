@@ -25,3 +25,7 @@ func (tree *BalanceTree) InitBalanceTree() {
 }
 
 func (tree *BalanceTree) Clear() {}
+
+func (tree *BalanceTree) balance() {
+	
+}
