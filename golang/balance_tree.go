@@ -24,8 +24,8 @@ func (tree *BalanceTree) InitBalanceTree() {
 	tree.root = new(BalanceNode)
 }
 
-func (tree *BalanceTree) Clear() {}
-
 func (tree *BalanceTree) balance() {
-	
+
 }
+
+func (tree *BalanceTree) Clear() {}
