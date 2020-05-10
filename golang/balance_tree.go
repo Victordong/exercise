@@ -28,5 +28,3 @@ func (tree *BalanceTree) InitBalanceTree() {
 func (tree *BalanceTree) balance() {
 	tree.Clear()
 }
-
-func (tree *BalanceTree) Clear() {}
