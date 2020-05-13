@@ -16,9 +16,13 @@ func max(first int, second int) int {
 	}
 }
 
-
 func toString() {
-	
+
 }
 
-
+type QueryRes struct {
+	Title    string `json:"title"`
+	URL      string `json:"url"`
+	LocalURL string `json:"local_url"`
+	Content  string `json:"content"`
+}
